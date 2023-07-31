@@ -12,8 +12,7 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
        val buttonArrowBack = findViewById<Button>(R.id.arrowBack)
         buttonArrowBack.setOnClickListener{
-            val displayMain = Intent(this, MainActivity::class.java)
-            startActivity(displayMain)
+            finish()
         }
     }
 }
