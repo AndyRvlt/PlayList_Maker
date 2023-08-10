@@ -10,10 +10,9 @@
     <color name="YP_black">#1A1B22</color>
     <color name="blackFigma">#000000</color>
     <color name="YP_Blue">#3772E7</color>
-    <color name="whiteBlackColorDayNight">#FFFFFFFF</color>
-    <color name="mainBackgroundDayNight">#3772E7</color>
-    <color name="blackWhiteColorDayNight">#1A1B22</color>
-    <color name="LightGray_White">#E6E8EB</color>
-    <color name="TextGray_Black">#AEAFB4</color>
-
+    <color name="whiteBlackColorDayNight">#000000</color>
+    <color name="mainBackgroundDayNight">#000000</color>
+    <color name="blackWhiteColorDayNight">#FFFFFFFF</color>
+    <color name="LightGray_White">#FFFFFFFF</color>
+    <color name="TextGray_Black">#000000</color>
 </resources>

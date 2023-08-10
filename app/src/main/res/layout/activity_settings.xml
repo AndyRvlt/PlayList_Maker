@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@color/whiteBlackColorDayNight"
     android:orientation="vertical"
     android:paddingTop="4dp">
 
@@ -15,23 +15,12 @@
 
         <Button
             android:id="@+id/arrowBack"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:backgroundTint="@color/white"
-            android:padding="12dp"
-            app:icon="@drawable/arrow_back"
-            app:iconGravity="textStart"
-            app:iconTint="@color/YP_black" />
+            style="@style/ButtonArrowBack"/>
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="right"
-            android:paddingTop="10dp"
-            android:text="@string/settings"
-            android:textAllCaps="false"
-            android:textColor="@color/YP_black"
-            android:textSize="22sp" />
+            style="@style/TopText"
+            android:text="@string/settings"/>
+
     </LinearLayout>
 
     <LinearLayout
@@ -40,19 +29,15 @@
         android:orientation="horizontal">
 
         <TextView
+            style="@style/TextSettings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/Settings_text_padding_horizontal"
-            android:paddingTop="@dimen/Settings_text_padding_top"
-            android:paddingBottom="@dimen/Settings_text_padding_bottom"
-            android:text="@string/dark_Theme"
-            android:textColor="@color/blackFigma"
-            android:textSize="16sp" />
+            android:text="@string/dark_Theme" />
 
         <Switch
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="end" />
+            android:layout_height="match_parent"
+            android:gravity="center_vertical" />
     </LinearLayout>
 
     <LinearLayout
@@ -61,37 +46,22 @@
         android:orientation="vertical">
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:id="@+id/share"
+            style="@style/TextSettings"
             android:drawableEnd="@drawable/share"
-            android:paddingHorizontal="@dimen/Settings_text_padding_horizontal"
-            android:paddingTop="@dimen/Settings_text_padding_top"
-            android:paddingBottom="@dimen/Settings_text_padding_bottom"
-            android:text="@string/share"
-            android:textColor="@color/blackFigma"
-            android:textSize="16sp" />
+            android:text="@string/share" />
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:id="@+id/support"
+            style="@style/TextSettings"
             android:drawableEnd="@drawable/support"
-            android:paddingHorizontal="@dimen/Settings_text_padding_horizontal"
-            android:paddingTop="@dimen/Settings_text_padding_top"
-            android:paddingBottom="@dimen/Settings_text_padding_bottom"
-            android:text="@string/support"
-            android:textColor="@color/blackFigma"
-            android:textSize="16sp" />
+            android:text="@string/support" />
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:id="@+id/userAgreement"
+            style="@style/TextSettings"
             android:drawableEnd="@drawable/arrow_forward"
-            android:paddingHorizontal="@dimen/Settings_text_padding_horizontal"
-            android:paddingTop="@dimen/Settings_text_padding_top"
-            android:paddingBottom="@dimen/Settings_text_padding_bottom"
-            android:text="@string/agreement"
-            android:textColor="@color/blackFigma"
-            android:textSize="16sp" />
+            android:text="@string/agreement" />
 
     </LinearLayout>
 
