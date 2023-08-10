@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="Settings_text_padding_horizontal">16dp</dimen>
+    <dimen name="Settings_text_padding_top">19dp</dimen>
+    <dimen name="Settings_text_padding_bottom">18dp</dimen>
+</resources>
