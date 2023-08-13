@@ -1,6 +1,5 @@
 package com.example.playlistmaker
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -14,8 +13,6 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
         val buttonShare = findViewById<TextView>(R.id.share)
         val buttonSupport = findViewById<TextView>(R.id.support)
-        val subjectMessage = "Сообщение разработчикам и разработчицам приложения Playlist Maker"
-        val supportMessage = "Спасибо разработчикам и разработчицам за крутое приложение!"
         val buttonArrowBack = findViewById<Button>(R.id.arrowBack)
         val buttonUserAgreement = findViewById<TextView>(R.id.userAgreement)
         buttonArrowBack.setOnClickListener {
@@ -26,21 +23,21 @@ class SettingsActivity : AppCompatActivity() {
             sharingSend.setType("text/plain")
             sharingSend.putExtra(
                 Intent.EXTRA_TEXT,
-                "https://practicum.yandex.ru/android-developer/"
+                getString(R.string.android_developer)
             )
             startActivity(sharingSend)
         }
         buttonSupport.setOnClickListener {
             val supportSend = Intent(Intent.ACTION_SENDTO)
             supportSend.data = Uri.parse("mailto:")
-            supportSend.putExtra(Intent.EXTRA_EMAIL, arrayListOf("AndyRevolt@yandex.ru"))
-            supportSend.putExtra(Intent.EXTRA_SUBJECT, subjectMessage)
-            supportSend.putExtra(Intent.EXTRA_TEXT, supportMessage)
+            supportSend.putExtra(Intent.EXTRA_EMAIL, arrayListOf(getString(R.string.yandex_mail)))
+            supportSend.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.subjectMessage))
+            supportSend.putExtra(Intent.EXTRA_TEXT, getString(R.string.supportMessage))
             startActivity(supportSend)
         }
         buttonUserAgreement.setOnClickListener {
             val goToUserAgreement =
-                Intent(Intent.ACTION_VIEW, Uri.parse("https://yandex.ru/legal/practicum_offer/"))
+                Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.web)))
             startActivity(goToUserAgreement)
         }
     }

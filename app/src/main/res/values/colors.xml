@@ -8,12 +8,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="YP_black">#1A1B22</color>
-    <color name="blackFigma">#000000</color>
     <color name="YP_Blue">#3772E7</color>
-    <color name="whiteBlackColorDayNight">#FFFFFFFF</color>
-    <color name="mainBackgroundDayNight">#3772E7</color>
-    <color name="blackWhiteColorDayNight">#1A1B22</color>
-    <color name="LightGray_White">#E6E8EB</color>
-    <color name="TextGray_Black">#AEAFB4</color>
-
+    <color name="LightGray">#E6E8EB</color>
+    <color name="Day_night_text_color_search_string">#AEAFB4</color>
+    <color name="Day_night_background_color_main_activity">#3772E7</color>
 </resources>

@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mainBackgroundDayNight"
+    android:background="@color/Day_night_background_color_main_activity"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -31,14 +31,15 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingHorizontal="16dp"
-        android:paddingTop="24dp"
-        android:paddingBottom="28dp">
+        android:paddingTop="26dp"
+        android:paddingBottom="20dp">
 
         <Button
             android:id="@+id/buttonSearch"
             style="@style/ButtonMainActivity"
+            android:letterSpacing="0"
             android:text="@string/button_Search"
-            app:icon="@drawable/search"/>
+            app:icon="@drawable/search" />
 
         <Button
             android:id="@+id/buttonMedia"

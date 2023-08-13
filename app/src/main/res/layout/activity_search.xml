@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/whiteBlackColorDayNight"
     android:orientation="vertical"
     android:paddingTop="4dp">
 
@@ -14,7 +13,7 @@
 
         <Button
             android:id="@+id/arrowBack"
-            style="@style/ButtonArrowBack"/>
+            style="@style/ButtonArrowBack" />
 
         <TextView
             style="@style/TopText"
@@ -23,42 +22,38 @@
     </LinearLayout>
 
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/whiteBlackColorDayNight"
-        android:orientation="horizontal"
         android:paddingHorizontal="16dp"
         android:paddingVertical="8dp">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/LightGray_White"
-            android:padding="8dp"
-            android:src="@drawable/search_icon" />
-
         <EditText
             android:id="@+id/search"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/LightGray_White"
+            android:background="@drawable/search_string"
+            android:drawableStart="@drawable/search_icon"
+            android:drawablePadding="8dp"
+            android:fontFamily="@font/ys_display_medium"
             android:hint="@string/button_Search"
             android:inputType="text"
+            android:paddingVertical="10dp"
+            android:paddingStart="12dp"
             android:textColor="@color/black"
-            android:textColorHint="@color/TextGray_Black"
+            android:textColorHint="@color/Day_night_text_color_search_string"
+            android:textFontWeight="400"
             android:textSize="16sp" />
 
         <ImageView
             android:id="@+id/clearIcon"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:background="@color/LightGray_White"
-            android:src="@drawable/share"
+            android:layout_gravity="end"
+            android:background="@drawable/search_string"
+            android:src="@drawable/clear_icon"
             android:visibility="gone" />
 
-    </LinearLayout>
+    </FrameLayout>
 
 </LinearLayout>
