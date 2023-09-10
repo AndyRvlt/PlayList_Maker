@@ -1,10 +1,8 @@
 package com.example.playlistmaker
 
-import android.annotation.SuppressLint
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -12,6 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import androidx.recyclerview.widget.RecyclerView
 
 class SearchActivity : AppCompatActivity() {
 
@@ -19,6 +18,7 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+
         val search = findViewById<EditText>(R.id.search)
         val clearIcon = findViewById<ImageView>(R.id.clearIcon)
         val buttonArrowBack = findViewById<Button>(R.id.arrowBack)
@@ -46,6 +46,43 @@ class SearchActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         }
         search.addTextChangedListener(searchTextWatcher)
+
+        val songAdapter = TracksAdapter(
+            listOf(
+                Track(
+                    getString(R.string.trackName1),
+                    getString(R.string.artistName1),
+                    getString(R.string.trackTime1),
+                    getString(R.string.urlTrack1)
+                ),
+                Track(
+                    getString(R.string.trackName2),
+                    getString(R.string.artistName2),
+                    getString(R.string.trackTime2),
+                    getString(R.string.urlTrack2)
+                ),
+                Track(
+                    getString(R.string.trackName3),
+                    getString(R.string.artistName3),
+                    getString(R.string.trackTime3),
+                    getString(R.string.urlTrack3)
+                ),
+                Track(
+                    getString(R.string.trackName4),
+                    getString(R.string.artistName4),
+                    getString(R.string.trackTime4),
+                    getString(R.string.urlTrack4)
+                ),
+                Track(
+                    getString(R.string.trackName5),
+                    getString(R.string.artistName5),
+                    getString(R.string.trackTime5),
+                    getString(R.string.urlTrack5)
+                ),
+            )
+        )
+        val playList = findViewById<RecyclerView>(R.id.searchPlayList)
+        playList.adapter = songAdapter
     }
 
     companion object {
