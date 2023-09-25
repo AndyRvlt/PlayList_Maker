@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingTop="4dp">
 
@@ -25,7 +25,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:paddingHorizontal="16dp"
         android:paddingVertical="8dp">
 
@@ -38,9 +38,11 @@
             android:drawablePadding="8dp"
             android:fontFamily="@font/ys_display_medium"
             android:hint="@string/button_Search"
+            android:imeOptions="actionDone"
             android:inputType="text"
             android:paddingVertical="10dp"
             android:paddingStart="12dp"
+            android:singleLine="true"
             android:textColor="@color/black"
             android:textColorHint="@color/Day_night_text_color_search_string"
             android:textFontWeight="400"
@@ -62,8 +64,34 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/song">
+        tools:listitem="@layout/track">
 
     </androidx.recyclerview.widget.RecyclerView>
 
+    <ImageView
+        android:id="@+id/searchError"
+        style="@style/ImageError"
+        android:src="@drawable/search_error" />
+
+    <TextView
+        android:id="@+id/textErrorNothing"
+        style="@style/SearchTextError"
+        android:text="@string/errorNothing">
+
+    </TextView>
+
+    <ImageView
+        android:id="@+id/searchServerError"
+        style="@style/ImageError"
+        android:src="@drawable/server_error" />
+
+    <TextView
+        android:id="@+id/textServerError"
+        style="@style/SearchTextError"
+        android:layout_height="wrap_content"
+        android:text="@string/serverError" />
+
+    <Button
+        android:id="@+id/update"
+        style="@style/Update" />
 </LinearLayout>
