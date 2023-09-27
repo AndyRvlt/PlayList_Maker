@@ -20,6 +20,6 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         singer.text = item.artistName
         songDuration.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(item.trackTimeMillis)
         val urlAlbumIcon = item.artworkUrl100
-        Glide.with(itemView).load(urlAlbumIcon).transform(RoundedCorners(25)).error(R.drawable.place_holder).into(albumImage)
+        Glide.with(itemView).load(urlAlbumIcon).transform(RoundedCorners(25)).placeholder(R.drawable.place_holder).into(albumImage)
     }
 }
