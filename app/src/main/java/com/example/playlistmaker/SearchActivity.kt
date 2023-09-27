@@ -14,6 +14,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isEmpty
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.*
@@ -28,6 +29,7 @@ class SearchActivity : AppCompatActivity() {
 
     private val trackService = retrofit.create(TrackApi::class.java)
 
+
     private lateinit var search: EditText
     private lateinit var clearIcon: ImageView
     private lateinit var buttonArrowBack: Button
@@ -38,14 +40,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var textServerError: TextView
     private lateinit var update: Button
 
-    val adapter = TracksAdapter()
-
-    private var searchText = ""
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
-
+    private fun initViews() {
         search = findViewById(R.id.search)
         clearIcon = findViewById(R.id.clearIcon)
         buttonArrowBack = findViewById(R.id.arrowBack)
@@ -55,6 +50,18 @@ class SearchActivity : AppCompatActivity() {
         searchServerError = findViewById(R.id.searchServerError)
         textServerError = findViewById(R.id.textServerError)
         update = findViewById(R.id.update)
+    }
+
+
+    val adapter = TracksAdapter()
+
+    private var searchText = ""
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_search)
+
+        initViews()
 
         searchPlayList.adapter = adapter
 
@@ -80,6 +87,7 @@ class SearchActivity : AppCompatActivity() {
             val inputMethodManager =
                 getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(clearIcon.windowToken, 0)
+            adapter.updateTracks(emptyList())
         }
 
         val searchTextWatcher = object : TextWatcher {
@@ -119,8 +127,9 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    fun requestTrackList() {
-        trackService.search(search.text.toString())
+    private fun requestTrackList() {
+        if (searchText.isEmpty()) return
+        trackService.search(searchText)
             .enqueue(object : Callback<TrackResponse> {
                 override fun onResponse(
                     call: Call<TrackResponse>,
@@ -142,6 +151,7 @@ class SearchActivity : AppCompatActivity() {
                             textErrorNothing.isVisible = false
                             searchServerError.isVisible = false
                             textServerError.isVisible = false
+                            update.isVisible = false
                         }
 
                     }
@@ -149,6 +159,9 @@ class SearchActivity : AppCompatActivity() {
                         searchPlayList.isVisible = false
                         searchServerError.isVisible = true
                         textServerError.isVisible = true
+                        update.isVisible = true
+                        searchError.isVisible = false
+                        textErrorNothing.isVisible = false
 
                     }
                 }
@@ -157,6 +170,7 @@ class SearchActivity : AppCompatActivity() {
                     searchPlayList.isVisible = false
                     searchServerError.isVisible = true
                     textServerError.isVisible = true
+                    update.isVisible = true
                 }
 
             })

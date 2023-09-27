@@ -29,7 +29,10 @@
             android:textColor="@color/Day_night_black_white_color"
             tools:text="Track Name"
             android:gravity="top"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:singleLine="false"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -43,8 +46,11 @@
                 android:fontFamily="@font/ys_display_regular"
                 android:textColor="@color/Day_night_gray_white"
                 android:textSize="11sp"
-                tools:text="Track singere"
-                app:iconGravity="textEnd" />
+                tools:text="Track singer"
+                app:iconGravity="textEnd"
+                android:ellipsize="end"
+                android:singleLine="false"
+                android:maxLength="30"/>
 
             <ImageView
                 android:layout_width="wrap_content"
