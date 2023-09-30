@@ -1,29 +1,84 @@
 package com.example.playlistmaker
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.core.view.isEmpty
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import retrofit2.*
+import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
 
+    private val retrofit = Retrofit.Builder()
+        .baseUrl("https://itunes.apple.com/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    private val trackService = retrofit.create(TrackApi::class.java)
+
+
+    private lateinit var search: EditText
+    private lateinit var clearIcon: ImageView
+    private lateinit var buttonArrowBack: Button
+    private lateinit var searchError: ImageView
+    private lateinit var searchPlayList: RecyclerView
+    private lateinit var textErrorNothing: TextView
+    private lateinit var searchServerError: ImageView
+    private lateinit var textServerError: TextView
+    private lateinit var update: Button
+
+    private fun initViews() {
+        search = findViewById(R.id.search)
+        clearIcon = findViewById(R.id.clearIcon)
+        buttonArrowBack = findViewById(R.id.arrowBack)
+        searchPlayList = findViewById(R.id.searchPlayList)
+        textErrorNothing = findViewById(R.id.textErrorNothing)
+        searchError = findViewById(R.id.searchError)
+        searchServerError = findViewById(R.id.searchServerError)
+        textServerError = findViewById(R.id.textServerError)
+        update = findViewById(R.id.update)
+    }
+
+
+    val adapter = TracksAdapter()
+
     private var searchText = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        val search = findViewById<EditText>(R.id.search)
-        val clearIcon = findViewById<ImageView>(R.id.clearIcon)
-        val buttonArrowBack = findViewById<Button>(R.id.arrowBack)
+        initViews()
+
+        searchPlayList.adapter = adapter
+
+        update.setOnClickListener {
+            requestTrackList()
+        }
+
         buttonArrowBack.setOnClickListener {
             finish()
+        }
+
+        search.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                requestTrackList()
+                true
+            }
+            false
         }
 
         clearIcon.setOnClickListener {
@@ -32,6 +87,7 @@ class SearchActivity : AppCompatActivity() {
             val inputMethodManager =
                 getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(clearIcon.windowToken, 0)
+            adapter.updateTracks(emptyList())
         }
 
         val searchTextWatcher = object : TextWatcher {
@@ -47,42 +103,6 @@ class SearchActivity : AppCompatActivity() {
         }
         search.addTextChangedListener(searchTextWatcher)
 
-        val songAdapter = TracksAdapter(
-            listOf(
-                Track(
-                    getString(R.string.trackName1),
-                    getString(R.string.artistName1),
-                    getString(R.string.trackTime1),
-                    getString(R.string.urlTrack1)
-                ),
-                Track(
-                    getString(R.string.trackName2),
-                    getString(R.string.artistName2),
-                    getString(R.string.trackTime2),
-                    getString(R.string.urlTrack2)
-                ),
-                Track(
-                    getString(R.string.trackName3),
-                    getString(R.string.artistName3),
-                    getString(R.string.trackTime3),
-                    getString(R.string.urlTrack3)
-                ),
-                Track(
-                    getString(R.string.trackName4),
-                    getString(R.string.artistName4),
-                    getString(R.string.trackTime4),
-                    getString(R.string.urlTrack4)
-                ),
-                Track(
-                    getString(R.string.trackName5),
-                    getString(R.string.artistName5),
-                    getString(R.string.trackTime5),
-                    getString(R.string.urlTrack5)
-                ),
-            )
-        )
-        val playList = findViewById<RecyclerView>(R.id.searchPlayList)
-        playList.adapter = songAdapter
     }
 
     companion object {
@@ -105,5 +125,54 @@ class SearchActivity : AppCompatActivity() {
         } else {
             View.VISIBLE
         }
+    }
+
+    private fun requestTrackList() {
+        if (searchText.isEmpty()) return
+        trackService.search(searchText)
+            .enqueue(object : Callback<TrackResponse> {
+                override fun onResponse(
+                    call: Call<TrackResponse>,
+                    response: Response<TrackResponse>
+                ) {
+                    if (response.code() == 200) {
+                        adapter.updateTracks(emptyList())
+                        if (response.body()?.results?.isNotEmpty() == true) {
+                            adapter.updateTracks(response.body()?.results ?: emptyList())
+                        }
+
+                        if (adapter.getTracks().isEmpty()) {
+                            searchPlayList.isVisible = false
+                            searchError.isVisible = true
+                            textErrorNothing.isVisible = true
+                        } else {
+                            searchPlayList.isVisible = true
+                            searchError.isVisible = false
+                            textErrorNothing.isVisible = false
+                            searchServerError.isVisible = false
+                            textServerError.isVisible = false
+                            update.isVisible = false
+                        }
+
+                    }
+                    if (response.code() == 500) {
+                        searchPlayList.isVisible = false
+                        searchServerError.isVisible = true
+                        textServerError.isVisible = true
+                        update.isVisible = true
+                        searchError.isVisible = false
+                        textErrorNothing.isVisible = false
+
+                    }
+                }
+
+                override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+                    searchPlayList.isVisible = false
+                    searchServerError.isVisible = true
+                    textServerError.isVisible = true
+                    update.isVisible = true
+                }
+
+            })
     }
 }

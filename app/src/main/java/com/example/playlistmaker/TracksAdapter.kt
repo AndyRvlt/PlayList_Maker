@@ -3,12 +3,14 @@ package com.example.playlistmaker
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import java.util.ArrayList
 
 class TracksAdapter(
-    private val tracks: List<Track>
+
 ) : RecyclerView.Adapter<TrackViewHolder>() {
+    private var tracks: List<Track> = mutableListOf()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.song, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.track, parent, false)
         return TrackViewHolder(view)
     }
 
@@ -16,7 +18,13 @@ class TracksAdapter(
         holder.bind(tracks[position])
     }
 
-    override fun getItemCount(): Int {
-        return tracks.size
+    override fun getItemCount() = tracks.size
+    fun updateTracks(tracks: List<Track>) {
+        this.tracks = tracks
+        notifyDataSetChanged()
+    }
+
+    fun getTracks(): List<Track> {
+return tracks
     }
 }
