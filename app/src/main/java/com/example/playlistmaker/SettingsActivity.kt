@@ -1,11 +1,15 @@
 package com.example.playlistmaker
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
+import com.google.android.material.switchmaterial.SwitchMaterial
+
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -15,6 +19,20 @@ class SettingsActivity : AppCompatActivity() {
         val buttonSupport = findViewById<TextView>(R.id.support)
         val buttonArrowBack = findViewById<Button>(R.id.arrowBack)
         val buttonUserAgreement = findViewById<TextView>(R.id.userAgreement)
+        val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
+
+
+        var pref: SharedPreferences =
+            getSharedPreferences(APP_SETTINGS_DAY_NIGHT_THEMES, MODE_PRIVATE)
+        val cheked = pref.getBoolean(KEY_THEMES, false)
+        themeSwitcher.isChecked = cheked
+
+        themeSwitcher.setOnCheckedChangeListener { _, checken ->
+     //       handleDarkThemes(checken)
+            (applicationContext as App).switchTheme(checken)
+        }
+
+
         buttonArrowBack.setOnClickListener {
             finish()
         }
@@ -41,4 +59,11 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(goToUserAgreement)
         }
     }
+//
+//    private fun handleDarkThemes(checken: Boolean) {
+//
+//
+//    }
+//
+
 }

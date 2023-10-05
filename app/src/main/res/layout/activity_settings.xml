@@ -18,51 +18,34 @@
 
         <TextView
             style="@style/TopText"
-            android:text="@string/settings"/>
+            android:text="@string/settings" />
 
     </LinearLayout>
 
-    <LinearLayout
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/themeSwitcher"
+        style="@style/TextSettings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:text="@string/dark_Theme" />
 
-        <TextView
-            style="@style/TextSettings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/dark_Theme" />
+    <TextView
+        android:id="@+id/share"
+        style="@style/TextSettings"
+        android:drawableEnd="@drawable/share"
+        android:text="@string/share" />
 
-        <Switch
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/support"
+        style="@style/TextSettings"
+        android:drawableEnd="@drawable/support"
+        android:text="@string/support" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/share"
-            style="@style/TextSettings"
-            android:drawableEnd="@drawable/share"
-            android:text="@string/share" />
-
-        <TextView
-            android:id="@+id/support"
-            style="@style/TextSettings"
-            android:drawableEnd="@drawable/support"
-            android:text="@string/support" />
-
-        <TextView
-            android:id="@+id/userAgreement"
-            style="@style/TextSettings"
-            android:drawableEnd="@drawable/arrow_forward"
-            android:text="@string/agreement" />
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/userAgreement"
+        style="@style/TextSettings"
+        android:drawableEnd="@drawable/arrow_forward"
+        android:text="@string/agreement" />
 
 </LinearLayout>
 
