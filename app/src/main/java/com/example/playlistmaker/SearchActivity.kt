@@ -23,7 +23,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 const val TRACK_HISTORY = "track_history"
 const val TRACK = "track"
-private lateinit var listener: SharedPreferences.OnSharedPreferenceChangeListener
+const val MAX_TRACKS_HISTORY_LIST = 10
+// private lateinit var listener: SharedPreferences.OnSharedPreferenceChangeListener
 
 class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
 
@@ -46,8 +47,9 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
     private lateinit var textServerError: TextView
     private lateinit var update: Button
     private lateinit var storyTrackLiner: LinearLayout
-    private lateinit var updateHistorySearch: Button
+    private lateinit var clearHistorySearch: Button
     private lateinit var historyTrackList: RecyclerView
+    private lateinit var sharedPreferences: SharedPreferences
 
     private fun initViews() {
         search = findViewById(R.id.search)
@@ -59,7 +61,7 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
         searchServerError = findViewById(R.id.searchServerError)
         textServerError = findViewById(R.id.textServerError)
         update = findViewById(R.id.update)
-        updateHistorySearch = findViewById(R.id.update_history_search)
+        clearHistorySearch = findViewById(R.id.clear_history_search)
         storyTrackLiner = findViewById(R.id.storyTrackLiner)
         historyTrackList = findViewById(R.id.historySearch)
     }
@@ -75,15 +77,21 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
+
+        sharedPreferences = getSharedPreferences(TRACK_HISTORY, MODE_PRIVATE)
         initViews()
         historyTrackList.adapter = adapterHistory
 
+        clearHistorySearch.setOnClickListener {
+            cleanHistory()
+        }
 
         searchPlayList.adapter = adapter
 
         update.setOnClickListener {
             requestTrackList()
         }
+
 
         buttonArrowBack.setOnClickListener {
             finish()
@@ -92,6 +100,8 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
         search.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 requestTrackList()
+                searchPlayList.isVisible = true
+                storyTrackLiner.isVisible = false
                 true
             }
             false
@@ -192,110 +202,58 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
             })
     }
 
-//    val sharedPreferences = getSharedPreferences(TRACK_HISTORY, MODE_PRIVATE)
-//
-//    data class TrackHendler(val list: List<Track>)
-//
-//    private fun createJsonFromTrack(track: Array<Track>): String {
-//        val sharedPreferences = getSharedPreferences(TRACK_HISTORY, MODE_PRIVATE)
-//        createTrackFromJson(sharedPreferences.getString(TRACK, "") ?: "")
-//        return Gson().toJson(track)
-//    }
-//
-//
-//    private fun createTrackFromJson(json: String): TrackResponse? {
-//        return Gson().fromJson(json, TrackResponse::class.java)
-//    }
-//
-//    //Чтение
-//    fun readHistoryTracks(sharedPreferences: SharedPreferences, tracks: Array<Track>): Array<Track>? {
-//        val json = sharedPreferences.getString(TRACK, null) ?: return null
-//        return Gson().fromJson(json, tracks::class.java)
-//    }
-//
-//
-//    fun saveHistoryTracks(tracks: Array<Track>) {
-//        val json = createJsonFromTrack(tracks)
-//        sharedPreferences.edit().putString(TRACK, json).apply()
-//    }
-//
+    object TrackPreferences {
 
-//
-//     fun addTrack(track: Track) {
-//        if (tracks.isEmpty()) {
-//            tracks.add(track)
-//        }
-//    }
-
-    //    fun readSearchHistory(): ArrayList<Track> {
-//        val json = sharedPreferences.getString(TRACK_HISTORY, null) ?: return ArrayList<Track>()
-//        return createTrackFromJson(json)
-//    }
-
-
-    private val tracks: ArrayList<Track> = getArrayOfTracks()
-
-    private fun getArrayOfTracks(): ArrayList<Track> {
-        return tracks
-    }
-
-    class TrackPreferences {
-
-        fun read(sharedPreferences: SharedPreferences): Array<Track> {
-            val json = sharedPreferences.getString(TRACK, null) ?: return emptyArray()
-            return Gson().fromJson(json, Array<Track>::class.java)
+        fun read(sharedPreferences: SharedPreferences): TrackDataHandler {
+            val json = sharedPreferences.getString(TRACK, null) ?: return TrackDataHandler(
+                mutableListOf()
+            )
+            return Gson().fromJson(json, TrackDataHandler::class.java)
         }
 
-        fun write(sharedPreferences: SharedPreferences, tracks: Array<Track>) {
-            val json = Gson().toJson(tracks)
+        fun write(sharedPreferences: SharedPreferences, trackHandler: TrackDataHandler) {
+            val json = Gson().toJson(trackHandler)
             sharedPreferences.edit().putString(TRACK, json).apply()
-        }
 
+
+        }
     }
 
-//    val sharedPreferences = getSharedPreferences(TRACK_HISTORY, MODE_PRIVATE)
-//    val track = sharedPreferences.getString(TRACK, null)
+    data class TrackDataHandler(
+        val tracks: MutableList<Track>
+    )
 
-//    private fun addTrack(track: Track) {
-//
-//        adapterHistory
-//
-//
-//    }
-
+    private fun cleanHistory() {
+        val trackDataHandler = TrackPreferences.read(sharedPreferences)
+        adapterHistory.updateTracks(trackDataHandler.tracks)
+        trackDataHandler.tracks.clear()
+        TrackPreferences.write(sharedPreferences, trackDataHandler)
+    }
 
     override fun onClick(track: Track) {
+        val trackDataHandler = TrackPreferences.read(sharedPreferences)
+        adapterHistory.updateTracks(trackDataHandler.tracks)
 
 
+        if (trackDataHandler.tracks.size < MAX_TRACKS_HISTORY_LIST) {
+            trackDataHandler.tracks.add(0, track)
+//            for (i in trackDataHandler.tracks) {
+//                if (i.trackId == track.trackId) {
+//                    trackDataHandler.tracks.remove(i)
+//                    trackDataHandler.tracks.add(0, track)
+//                }
+//            }
+        } else {
+            trackDataHandler.tracks.removeLast()
+            trackDataHandler.tracks.add(0, track)
+        }
+        TrackPreferences.write(sharedPreferences, trackDataHandler)
 
 
-//        val sharedPreferences = getSharedPreferences(TRACK_HISTORY, MODE_PRIVATE)
-//        val tracks = sharedPreferences.getString(TRACK, null)
-        adapterHistory
-
-//        addTrack(track)
-
-        Toast.makeText(this, "Нажали на: ${track.trackName}", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(this, "Нажали на: ${track.trackName}", Toast.LENGTH_SHORT).show()
 
         searchPlayList.isVisible = false
         storyTrackLiner.isVisible = true
-
-
-//
-
-//
-//        sharedPreferences.edit().putString(TRACK, createJsonFromTrack(track)).apply()
-
-
-//        listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
-//
-//            if (key == TRACK) {
-//                sharedPreferences?.getString(TRACK, null)
-//
-//
-//            }
-//        }
-//        sharedPreferences.registerOnSharedPreferenceChangeListener(listener)
 
 
     }

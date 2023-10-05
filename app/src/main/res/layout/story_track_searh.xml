@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<LinearLayout
+
     android:id="@+id/storyTrackLiner"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
-    <Button
-        android:id="@+id/update_history_search"
-        style="@style/Update"
-        android:visibility="visible"
-        android:text="Очистить"/>
 
 
     <TextView
@@ -29,9 +29,17 @@
         android:id="@+id/historySearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="visible"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/track"
-        android:visibility="visible">
+        tools:listitem="@layout/track">
 
     </androidx.recyclerview.widget.RecyclerView>
+
+    <Button
+        android:id="@+id/clear_history_search"
+        style="@style/Update"
+        android:text="Очистить историю"
+        android:visibility="visible"/>
 </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>

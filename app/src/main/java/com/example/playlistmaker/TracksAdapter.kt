@@ -28,9 +28,5 @@ return tracks
      interface TrackListener{
          fun onClick(track: Track)
      }
-//    эксперимент
-fun getTrack(track: Track): Track {
-return track
-}
 
 }
