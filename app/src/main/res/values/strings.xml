@@ -17,4 +17,6 @@
     <string name="errorNothing">Ничего не нашлось</string>
     <string name="serverError">Проблемы со связью\n \nЗагрузка не удалась. Проверьте\nподключение к интеренету</string>
     <string name="update">Обновить</string>
+    <string name="clear_history">Очистить историю</string>
+    <string name="you_searh">Вы искали</string>
 </resources>

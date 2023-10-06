@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
 
 const val TRACK_HISTORY = "track_history"
 const val TRACK = "track"
@@ -135,6 +136,8 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
         }
         search.addTextChangedListener(searchTextWatcher)
 
+        val trackDataHandler = TrackPreferences.read(sharedPreferences)
+        adapterHistory.updateTracks(trackDataHandler.tracks)
     }
 
     companion object {
@@ -239,34 +242,52 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
 
     override fun onClick(track: Track) {
         val trackDataHandler = TrackPreferences.read(sharedPreferences)
-//        adapterHistory.updateTracks(trackDataHandler.tracks)
-     val    it = trackDataHandler.tracks.iterator();
+
 
         if (trackDataHandler.tracks.size < MAX_TRACKS_HISTORY_LIST) {
-            trackDataHandler.tracks.add(0, track)
-            while (it.hasNext())  {
-                val value = it.next()
-                if (value.trackId == track.trackId) {
-                    trackDataHandler.tracks.remove(value)
-                    trackDataHandler.tracks.add(0, track)
-                    adapterHistory.updateTracks(trackDataHandler.tracks)
+            val foundTrack = trackDataHandler.tracks.find { it.trackId == track.trackId }
+            if (foundTrack == null) {
+                trackDataHandler.tracks.add(0, track)
+                adapterHistory.updateTracks(trackDataHandler.tracks)
+            } else {
+                trackDataHandler.tracks.forEachIndexed { index, item ->
+                    if (item.trackId == track.trackId) {
+                        Collections.swap(trackDataHandler.tracks, index, 0)
+                        adapterHistory.updateTracks(trackDataHandler.tracks)
+                    }
                 }
             }
-
         } else {
             trackDataHandler.tracks.removeLast()
             trackDataHandler.tracks.add(0, track)
+            adapterHistory.updateTracks(trackDataHandler.tracks)
         }
 
+//        adapterHistory.updateTracks(trackDataHandler.tracks)
+//     val    it = trackDataHandler.tracks.iterator();
+
+//        if (trackDataHandler.tracks.size < MAX_TRACKS_HISTORY_LIST) {
+//            trackDataHandler.tracks.add(0, track)
+//
+//        } else {
+//            trackDataHandler.tracks.removeLast()
+//            trackDataHandler.tracks.add(0, track)
+//
+//        }
+//
+//        if (trackDataHandler.tracks.isNotEmpty()){
+//            for(i in trackDataHandler.tracks){
+//                if (i.trackId == track.trackId){
+//                    trackDataHandler.tracks.remove(i)
+//                    trackDataHandler.tracks.add(track)
+//                }
+//            }
+//        }
+        adapterHistory.updateTracks(trackDataHandler.tracks)
         TrackPreferences.write(sharedPreferences, trackDataHandler)
-
-
-//        Toast.makeText(this, "Нажали на: ${track.trackName}", Toast.LENGTH_SHORT).show()
 
         searchPlayList.isVisible = false
         storyTrackLiner.isVisible = true
 
-
     }
-
 }
