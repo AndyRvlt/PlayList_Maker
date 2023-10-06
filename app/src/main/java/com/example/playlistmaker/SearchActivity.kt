@@ -16,6 +16,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import retrofit2.*
@@ -24,7 +25,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 const val TRACK_HISTORY = "track_history"
 const val TRACK = "track"
 const val MAX_TRACKS_HISTORY_LIST = 10
-// private lateinit var listener: SharedPreferences.OnSharedPreferenceChangeListener
+
 
 class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
 
@@ -47,9 +48,12 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
     private lateinit var textServerError: TextView
     private lateinit var update: Button
     private lateinit var storyTrackLiner: LinearLayout
+
+    //    private lateinit var storyTrackLiner: LinearLayout
     private lateinit var clearHistorySearch: Button
     private lateinit var historyTrackList: RecyclerView
     private lateinit var sharedPreferences: SharedPreferences
+
 
     private fun initViews() {
         search = findViewById(R.id.search)
@@ -81,12 +85,13 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
         sharedPreferences = getSharedPreferences(TRACK_HISTORY, MODE_PRIVATE)
         initViews()
         historyTrackList.adapter = adapterHistory
+        searchPlayList.adapter = adapter
 
         clearHistorySearch.setOnClickListener {
             cleanHistory()
         }
 
-        searchPlayList.adapter = adapter
+
 
         update.setOnClickListener {
             requestTrackList()
@@ -102,6 +107,7 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
                 requestTrackList()
                 searchPlayList.isVisible = true
                 storyTrackLiner.isVisible = false
+
                 true
             }
             false
@@ -230,23 +236,28 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
         TrackPreferences.write(sharedPreferences, trackDataHandler)
     }
 
+
     override fun onClick(track: Track) {
         val trackDataHandler = TrackPreferences.read(sharedPreferences)
-        adapterHistory.updateTracks(trackDataHandler.tracks)
-
+//        adapterHistory.updateTracks(trackDataHandler.tracks)
+     val    it = trackDataHandler.tracks.iterator();
 
         if (trackDataHandler.tracks.size < MAX_TRACKS_HISTORY_LIST) {
             trackDataHandler.tracks.add(0, track)
-//            for (i in trackDataHandler.tracks) {
-//                if (i.trackId == track.trackId) {
-//                    trackDataHandler.tracks.remove(i)
-//                    trackDataHandler.tracks.add(0, track)
-//                }
-//            }
+            while (it.hasNext())  {
+                val value = it.next()
+                if (value.trackId == track.trackId) {
+                    trackDataHandler.tracks.remove(value)
+                    trackDataHandler.tracks.add(0, track)
+                    adapterHistory.updateTracks(trackDataHandler.tracks)
+                }
+            }
+
         } else {
             trackDataHandler.tracks.removeLast()
             trackDataHandler.tracks.add(0, track)
         }
+
         TrackPreferences.write(sharedPreferences, trackDataHandler)
 
 
