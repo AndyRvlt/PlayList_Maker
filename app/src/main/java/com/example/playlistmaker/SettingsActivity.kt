@@ -28,7 +28,6 @@ class SettingsActivity : AppCompatActivity() {
         themeSwitcher.isChecked = cheked
 
         themeSwitcher.setOnCheckedChangeListener { _, checken ->
-     //       handleDarkThemes(checken)
             (applicationContext as App).switchTheme(checken)
         }
 
@@ -59,11 +58,5 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(goToUserAgreement)
         }
     }
-//
-//    private fun handleDarkThemes(checken: Boolean) {
-//
-//
-//    }
-//
 
 }

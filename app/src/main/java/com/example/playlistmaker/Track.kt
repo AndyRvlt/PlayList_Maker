@@ -6,4 +6,4 @@ data class Track (
     val trackTimeMillis: Long, // Продолжительность трека
     val artworkUrl100: String, // Ссылка на изображение обложки
     val trackId: String
-        )
+)

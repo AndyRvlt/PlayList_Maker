@@ -49,8 +49,6 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
     private lateinit var textServerError: TextView
     private lateinit var update: Button
     private lateinit var storyTrackLiner: LinearLayout
-
-    //    private lateinit var storyTrackLiner: LinearLayout
     private lateinit var clearHistorySearch: Button
     private lateinit var historyTrackList: RecyclerView
     private lateinit var sharedPreferences: SharedPreferences
@@ -239,51 +237,13 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
         TrackPreferences.write(sharedPreferences, trackDataHandler)
     }
 
-
     override fun onClick(track: Track) {
         val trackDataHandler = TrackPreferences.read(sharedPreferences)
 
 
-        if (trackDataHandler.tracks.size < MAX_TRACKS_HISTORY_LIST) {
-            val foundTrack = trackDataHandler.tracks.find { it.trackId == track.trackId }
-            if (foundTrack == null) {
-                trackDataHandler.tracks.add(0, track)
-                adapterHistory.updateTracks(trackDataHandler.tracks)
-            } else {
-                trackDataHandler.tracks.forEachIndexed { index, item ->
-                    if (item.trackId == track.trackId) {
-                        Collections.swap(trackDataHandler.tracks, index, 0)
-                        adapterHistory.updateTracks(trackDataHandler.tracks)
-                    }
-                }
-            }
-        } else {
-            trackDataHandler.tracks.removeLast()
-            trackDataHandler.tracks.add(0, track)
-            adapterHistory.updateTracks(trackDataHandler.tracks)
-        }
 
-//        adapterHistory.updateTracks(trackDataHandler.tracks)
-//     val    it = trackDataHandler.tracks.iterator();
+        adapterHistory.addTrack(track, trackDataHandler)
 
-//        if (trackDataHandler.tracks.size < MAX_TRACKS_HISTORY_LIST) {
-//            trackDataHandler.tracks.add(0, track)
-//
-//        } else {
-//            trackDataHandler.tracks.removeLast()
-//            trackDataHandler.tracks.add(0, track)
-//
-//        }
-//
-//        if (trackDataHandler.tracks.isNotEmpty()){
-//            for(i in trackDataHandler.tracks){
-//                if (i.trackId == track.trackId){
-//                    trackDataHandler.tracks.remove(i)
-//                    trackDataHandler.tracks.add(track)
-//                }
-//            }
-//        }
-        adapterHistory.updateTracks(trackDataHandler.tracks)
         TrackPreferences.write(sharedPreferences, trackDataHandler)
 
         searchPlayList.isVisible = false
