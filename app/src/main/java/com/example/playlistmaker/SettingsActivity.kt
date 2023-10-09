@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 
@@ -22,9 +21,9 @@ class SettingsActivity : AppCompatActivity() {
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
 
 
-        var pref: SharedPreferences =
+        var preferencesDayNightThemes: SharedPreferences =
             getSharedPreferences(APP_SETTINGS_DAY_NIGHT_THEMES, MODE_PRIVATE)
-        val cheked = pref.getBoolean(KEY_THEMES, false)
+        val cheked = preferencesDayNightThemes.getBoolean(KEY_THEMES, false)
         themeSwitcher.isChecked = cheked
 
         themeSwitcher.setOnCheckedChangeListener { _, checken ->

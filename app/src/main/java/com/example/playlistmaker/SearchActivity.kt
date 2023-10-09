@@ -86,16 +86,14 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
         historyTrackList.adapter = adapterHistory
         searchPlayList.adapter = adapter
 
+        startSearchActivity()
         clearHistorySearch.setOnClickListener {
             cleanHistory()
         }
 
-
-
         update.setOnClickListener {
             requestTrackList()
         }
-
 
         buttonArrowBack.setOnClickListener {
             finish()
@@ -232,9 +230,16 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
 
     private fun cleanHistory() {
         val trackDataHandler = TrackPreferences.read(sharedPreferences)
-        adapterHistory.updateTracks(trackDataHandler.tracks)
         trackDataHandler.tracks.clear()
+        adapterHistory.updateTracks(trackDataHandler.tracks)
         TrackPreferences.write(sharedPreferences, trackDataHandler)
+    }
+
+    private fun startSearchActivity() {
+        val trackDataHandler = TrackPreferences.read(sharedPreferences)
+        if (trackDataHandler.tracks.isEmpty()) {
+            storyTrackLiner.isVisible = false
+        }
     }
 
     override fun onClick(track: Track) {
