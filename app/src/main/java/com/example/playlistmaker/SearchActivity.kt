@@ -233,6 +233,7 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
         trackDataHandler.tracks.clear()
         adapterHistory.updateTracks(trackDataHandler.tracks)
         TrackPreferences.write(sharedPreferences, trackDataHandler)
+        storyTrackLiner.isVisible = false
     }
 
     private fun startSearchActivity() {
