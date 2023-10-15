@@ -63,11 +63,12 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchPlayList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/track">
 
     </androidx.recyclerview.widget.RecyclerView>
+
 
     <ImageView
         android:id="@+id/searchError"
@@ -95,4 +96,7 @@
     <Button
         android:id="@+id/update"
         style="@style/Update" />
+
+    <include layout="@layout/story_track_searh" />
+
 </LinearLayout>

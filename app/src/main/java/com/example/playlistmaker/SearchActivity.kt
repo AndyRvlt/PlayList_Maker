@@ -1,7 +1,7 @@
 package com.example.playlistmaker
 
-import android.annotation.SuppressLint
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -12,15 +12,24 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.view.isEmpty
 import androidx.core.view.isVisible
+import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
 
-class SearchActivity : AppCompatActivity() {
+const val TRACK_HISTORY = "track_history"
+const val TRACK = "track"
+const val MAX_TRACKS_HISTORY_LIST = 10
+
+
+class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
+
 
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://itunes.apple.com/")
@@ -39,6 +48,11 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchServerError: ImageView
     private lateinit var textServerError: TextView
     private lateinit var update: Button
+    private lateinit var storyTrackLiner: LinearLayout
+    private lateinit var clearHistorySearch: Button
+    private lateinit var historyTrackList: RecyclerView
+    private lateinit var sharedPreferences: SharedPreferences
+
 
     private fun initViews() {
         search = findViewById(R.id.search)
@@ -50,10 +64,15 @@ class SearchActivity : AppCompatActivity() {
         searchServerError = findViewById(R.id.searchServerError)
         textServerError = findViewById(R.id.textServerError)
         update = findViewById(R.id.update)
+        clearHistorySearch = findViewById(R.id.clear_history_search)
+        storyTrackLiner = findViewById(R.id.storyTrackLiner)
+        historyTrackList = findViewById(R.id.historySearch)
     }
 
 
-    val adapter = TracksAdapter()
+    val adapter = TracksAdapter(this)
+    val adapterHistory = TracksAdapter(this)
+
 
     private var searchText = ""
 
@@ -61,9 +80,16 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        initViews()
 
+        sharedPreferences = getSharedPreferences(TRACK_HISTORY, MODE_PRIVATE)
+        initViews()
+        historyTrackList.adapter = adapterHistory
         searchPlayList.adapter = adapter
+
+        startSearchActivity()
+        clearHistorySearch.setOnClickListener {
+            cleanHistory()
+        }
 
         update.setOnClickListener {
             requestTrackList()
@@ -76,6 +102,9 @@ class SearchActivity : AppCompatActivity() {
         search.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 requestTrackList()
+                searchPlayList.isVisible = true
+                storyTrackLiner.isVisible = false
+
                 true
             }
             false
@@ -103,6 +132,8 @@ class SearchActivity : AppCompatActivity() {
         }
         search.addTextChangedListener(searchTextWatcher)
 
+        val trackDataHandler = TrackPreferences.read(sharedPreferences)
+        adapterHistory.updateTracks(trackDataHandler.tracks)
     }
 
     companion object {
@@ -174,5 +205,55 @@ class SearchActivity : AppCompatActivity() {
                 }
 
             })
+    }
+
+    object TrackPreferences {
+
+        fun read(sharedPreferences: SharedPreferences): TrackDataHandler {
+            val json = sharedPreferences.getString(TRACK, null) ?: return TrackDataHandler(
+                mutableListOf()
+            )
+            return Gson().fromJson(json, TrackDataHandler::class.java)
+        }
+
+        fun write(sharedPreferences: SharedPreferences, trackHandler: TrackDataHandler) {
+            val json = Gson().toJson(trackHandler)
+            sharedPreferences.edit().putString(TRACK, json).apply()
+
+
+        }
+    }
+
+    data class TrackDataHandler(
+        val tracks: MutableList<Track>
+    )
+
+    private fun cleanHistory() {
+        val trackDataHandler = TrackPreferences.read(sharedPreferences)
+        trackDataHandler.tracks.clear()
+        adapterHistory.updateTracks(trackDataHandler.tracks)
+        TrackPreferences.write(sharedPreferences, trackDataHandler)
+        storyTrackLiner.isVisible = false
+    }
+
+    private fun startSearchActivity() {
+        val trackDataHandler = TrackPreferences.read(sharedPreferences)
+        if (trackDataHandler.tracks.isEmpty()) {
+            storyTrackLiner.isVisible = false
+        }
+    }
+
+    override fun onClick(track: Track) {
+        val trackDataHandler = TrackPreferences.read(sharedPreferences)
+
+
+
+        adapterHistory.addTrack(track, trackDataHandler)
+
+        TrackPreferences.write(sharedPreferences, trackDataHandler)
+
+        searchPlayList.isVisible = false
+        storyTrackLiner.isVisible = true
+
     }
 }
