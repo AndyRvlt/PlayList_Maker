@@ -47,6 +47,8 @@ class TracksAdapter(val trackListener: TrackListener) : RecyclerView.Adapter<Tra
         }
     }
 
+
+
     fun getTracks(): List<Track> {
         return tracks
     }
