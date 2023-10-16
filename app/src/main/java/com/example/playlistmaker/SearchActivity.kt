@@ -245,7 +245,7 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
     override fun onClick(track: Track) {
 
         val displayAudioPlayer = Intent(this, AudioPlayerActivity::class.java).apply {
-            putExtra("TR",track)
+            putExtra("TR", track)
         }
         startActivity(displayAudioPlayer)
 
@@ -253,9 +253,6 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
 
         adapterHistory.addTrack(track, trackDataHandler)
         TrackPreferences.write(sharedPreferences, trackDataHandler)
-
-        searchPlayList.isVisible = false
-        storyTrackLiner.isVisible = true
 
     }
 }
