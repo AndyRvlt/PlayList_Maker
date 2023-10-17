@@ -245,7 +245,7 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
     override fun onClick(track: Track) {
 
         val displayAudioPlayer = Intent(this, AudioPlayerActivity::class.java).apply {
-            putExtra("TR", track)
+            putExtra(TRACK_SERIALIZABLE, track)
         }
         startActivity(displayAudioPlayer)
 
