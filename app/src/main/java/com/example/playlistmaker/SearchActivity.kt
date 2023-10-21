@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -14,14 +15,11 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.view.isVisible
-import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.*
 
 const val TRACK_HISTORY = "track_history"
 const val TRACK = "track"
@@ -243,17 +241,18 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
         }
     }
 
+
     override fun onClick(track: Track) {
+
+        val displayAudioPlayer = Intent(this, AudioPlayerActivity::class.java).apply {
+            putExtra(TRACK_SERIALIZABLE, track)
+        }
+        startActivity(displayAudioPlayer)
+
         val trackDataHandler = TrackPreferences.read(sharedPreferences)
 
-
-
         adapterHistory.addTrack(track, trackDataHandler)
-
         TrackPreferences.write(sharedPreferences, trackDataHandler)
-
-        searchPlayList.isVisible = false
-        storyTrackLiner.isVisible = true
 
     }
 }

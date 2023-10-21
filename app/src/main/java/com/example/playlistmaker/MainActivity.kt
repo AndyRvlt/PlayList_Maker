@@ -3,7 +3,6 @@ package com.example.playlistmaker
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 
 class MainActivity : AppCompatActivity() {
@@ -15,7 +14,7 @@ class MainActivity : AppCompatActivity() {
         val buttonSettings = findViewById<Button>(R.id.buttonSettings)
 
         buttonMedia.setOnClickListener {
-            val displayMedia = Intent(this, MediaActivity::class.java)
+            val displayMedia = Intent(this, AudioPlayerActivity::class.java)
             startActivity(displayMedia)
 
         }
