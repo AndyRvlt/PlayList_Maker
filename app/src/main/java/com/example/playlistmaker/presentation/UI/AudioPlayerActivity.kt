@@ -1,8 +1,7 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.UI
 
 
 import android.icu.text.SimpleDateFormat
-import android.media.MediaPlayer.OnCompletionListener
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -13,8 +12,11 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.R
+import com.example.playlistmaker.data.DateFormater
 import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
-import java.time.ZoneId
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.presentation.MediaPlayer
 import java.util.*
 
 const val TRACK_SERIALIZABLE = "track_Serializable"
@@ -60,16 +62,9 @@ class AudioPlayerActivity : AppCompatActivity() {
         binding.apply {
             trackName.text = item.trackName
             singer.text = item.artistName
-            songDuration.text =
-                SimpleDateFormat("mm:ss", Locale.getDefault()).format(item.trackTimeMillis)
+            songDuration.text = DateFormater.trackTimeFormatter(item.trackTimeMillis)
             nameAlbum.text = item.collectionName
-            earAlbum.text =
-                SimpleDateFormat("yyyy")
-                    .parse(item.releaseDate)
-                    .toInstant()
-                    .atZone(ZoneId.systemDefault())
-                    .year
-                    .toString()
+            earAlbum.text = DateFormater.trackDateFormatter(item.releaseDate)
             nameGenre.text = item.primaryGenreName
             nameCountry.text = item.country
             val urlAlbumIcon = item.getCoverArtwork()
@@ -92,7 +87,6 @@ class AudioPlayerActivity : AppCompatActivity() {
                 buttonPause.isVisible = false
 
             }
-
 
             val myRunnable = object : Runnable {
                 override fun run() {

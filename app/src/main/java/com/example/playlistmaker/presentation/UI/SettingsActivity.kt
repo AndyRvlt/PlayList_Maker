@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.UI
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -7,6 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import com.example.playlistmaker.APP_SETTINGS_DAY_NIGHT_THEMES
+import com.example.playlistmaker.App
+import com.example.playlistmaker.KEY_THEMES
+import com.example.playlistmaker.R
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 

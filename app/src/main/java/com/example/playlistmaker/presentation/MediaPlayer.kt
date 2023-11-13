@@ -1,7 +1,8 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation
 
 import android.media.MediaPlayer
-import java.util.logging.Handler
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.presentation.UI.AudioPlayerActivity
 
 class MediaPlayer {
 

@@ -1,9 +1,8 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.UI
 
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -15,13 +14,20 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.R
+import com.example.playlistmaker.data.response.TrackResponse
+import com.example.playlistmaker.data.network.TrackApi
+import com.example.playlistmaker.data.preferences.TrackPreferences
+import com.example.playlistmaker.domain.interactor.GetTracksInteractor
+import com.example.playlistmaker.domain.interactor.GetTracksInteractorImpl
+import com.example.playlistmaker.domain.interactor.TrackPrefencesInteractorImpl
+import com.example.playlistmaker.domain.models.Track
 import com.google.gson.Gson
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
@@ -38,14 +44,6 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
-
-
-    private val retrofit = Retrofit.Builder()
-        .baseUrl("https://itunes.apple.com/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    private val trackService = retrofit.create(TrackApi::class.java)
 
     private var search: EditText? = null
     private var clearIcon: ImageView? = null
@@ -82,10 +80,10 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
 
     }
 
-
     val adapter = TracksAdapter(this)
     val adapterHistory = TracksAdapter(this)
-
+    val tracksInteractor = GetTracksInteractorImpl()
+    val trackPrefencesInteractorImpl = TrackPrefencesInteractorImpl()
 
     private var searchText = ""
 
@@ -93,9 +91,8 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-
-
         sharedPreferences = getSharedPreferences(TRACK_HISTORY, MODE_PRIVATE)
+
         initViews()
         historyTrackList?.adapter = adapterHistory
         searchPlayList?.adapter = adapter
@@ -148,7 +145,7 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
         }
         search?.addTextChangedListener(searchTextWatcher)
 
-        val trackDataHandler = TrackPreferences.read(sharedPreferences)
+        val trackDataHandler = trackPrefencesInteractorImpl.getTrackPreferences(sharedPreferences)
         adapterHistory.updateTracks(trackDataHandler.tracks)
     }
 
@@ -189,98 +186,52 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
         }
     }
 
-
     private fun requestTrackList() {
         progressBar?.isVisible = true
         searchPlayList?.isVisible = false
         historyTrackList?.isVisible = false
         storyTrackLiner?.isVisible = false
         if (searchText.isNotEmpty())
-            trackService.search(searchText)
-                .enqueue(object : Callback<TrackResponse> {
-                    override fun onResponse(
-                        call: Call<TrackResponse>,
-                        response: Response<TrackResponse>
-                    ) {
+
+
+            tracksInteractor.getTracks(searchText, object : GetTracksInteractor.GetTrackConsumer {
+                override fun consume(tracks: List<Track>) {
+                    handler.post {
                         progressBar?.isVisible = false
-                        if (response.code() == 200) {
-                            adapter.updateTracks(emptyList())
-                            if (response.body()?.results?.isNotEmpty() == true) {
-                                adapter.updateTracks(response.body()?.results ?: emptyList())
-                            }
 
-                            if (adapter.getTracks().isEmpty()) {
-                                searchPlayList?.isVisible = false
-                                searchError?.isVisible = true
-                                textErrorNothing?.isVisible = true
-                            } else {
-                                searchPlayList?.isVisible = true
-                                searchError?.isVisible = false
-                                textErrorNothing?.isVisible = false
-                                searchServerError?.isVisible = false
-                                textServerError?.isVisible = false
-                                update?.isVisible = false
-                            }
+                        adapter.updateTracks(tracks)
 
-                        }
-                        if (response.code() == 500) {
+                        if (adapter.getTracks().isEmpty()) {
                             searchPlayList?.isVisible = false
-                            searchServerError?.isVisible = true
-                            textServerError?.isVisible = true
-                            update?.isVisible = true
+                            searchError?.isVisible = true
+                            textErrorNothing?.isVisible = true
+                        } else {
+                            searchPlayList?.isVisible = true
                             searchError?.isVisible = false
                             textErrorNothing?.isVisible = false
-
+                            searchServerError?.isVisible = false
+                            textServerError?.isVisible = false
+                            update?.isVisible = false
                         }
                     }
 
-                    override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                        progressBar?.isVisible = false
-                        searchPlayList?.isVisible = false
-                        searchServerError?.isVisible = true
-                        textServerError?.isVisible = true
-                        update?.isVisible = true
-                    }
 
-                })
+                }
+            })
     }
-
-    object TrackPreferences {
-
-        fun read(sharedPreferences: SharedPreferences): TrackDataHandler {
-            val json = sharedPreferences.getString(TRACK, null) ?: return TrackDataHandler(
-                mutableListOf()
-            )
-            return Gson().fromJson(json, TrackDataHandler::class.java)
-        }
-
-        fun write(sharedPreferences: SharedPreferences, trackHandler: TrackDataHandler) {
-            val json = Gson().toJson(trackHandler)
-            sharedPreferences.edit().putString(TRACK, json).apply()
-
-
-        }
-    }
-
-    data class TrackDataHandler(
-        val tracks: MutableList<Track>
-    )
 
     private fun cleanHistory() {
-        val trackDataHandler = TrackPreferences.read(sharedPreferences)
-        trackDataHandler.tracks.clear()
-        adapterHistory.updateTracks(trackDataHandler.tracks)
-        TrackPreferences.write(sharedPreferences, trackDataHandler)
+        trackPrefencesInteractorImpl.cleanHistory(sharedPreferences)
+        adapterHistory.updateTracks(emptyList())
         storyTrackLiner?.isVisible = false
     }
 
     private fun startSearchActivity() {
-        val trackDataHandler = TrackPreferences.read(sharedPreferences)
+        val trackDataHandler = trackPrefencesInteractorImpl.getTrackPreferences(sharedPreferences)
         if (trackDataHandler.tracks.isEmpty()) {
             storyTrackLiner?.isVisible = false
         }
     }
-
 
     override fun onClick(track: Track) {
         if (clickDebounce()) {
@@ -289,11 +240,12 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
             }
             startActivity(displayAudioPlayer)
 
-            val trackDataHandler = TrackPreferences.read(sharedPreferences)
+            val trackDataHandler =
+                trackPrefencesInteractorImpl.getTrackPreferences(sharedPreferences)
 
             adapterHistory.addTrack(track, trackDataHandler)
-            TrackPreferences.write(sharedPreferences, trackDataHandler)
 
+            trackPrefencesInteractorImpl.write(trackDataHandler, sharedPreferences)
         }
     }
 
