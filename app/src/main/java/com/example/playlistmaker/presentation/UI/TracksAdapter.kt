@@ -1,10 +1,11 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.UI
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import java.util.Collections
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.domain.models.TrackDataHandler
 
 class TracksAdapter(val trackListener: TrackListener) : RecyclerView.Adapter<TrackViewHolder>() {
     private var tracks: MutableList<Track> = mutableListOf()
@@ -23,7 +24,7 @@ class TracksAdapter(val trackListener: TrackListener) : RecyclerView.Adapter<Tra
         notifyDataSetChanged()
     }
 
-    fun addTrack(track: Track, trackDataHandler: SearchActivity.TrackDataHandler) {
+    fun addTrack(track: Track, trackDataHandler: TrackDataHandler) {
         val foundTrack = tracks.find { it.trackId == track.trackId }
 
         if (trackDataHandler.tracks.size < MAX_TRACKS_HISTORY_LIST) {
