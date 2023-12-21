@@ -18,28 +18,28 @@
         android:name="com.example.playlistmaker.App">
 
         <activity
-            android:name=".presentation.UI.SearchActivity"
+            android:name=".search.UI.SearchActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".presentation.UI.AudioPlayerActivity"
+            android:name=".player.UI.AudioPlayerActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".presentation.UI.SettingsActivity"
+            android:name=".settings.UI.SettingsActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".presentation.UI.MainActivity"
+            android:name=".main.UI.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
