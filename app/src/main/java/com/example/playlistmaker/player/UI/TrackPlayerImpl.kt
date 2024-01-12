@@ -1,16 +1,18 @@
 package com.example.playlistmaker.player.UI
 
-import android.media.MediaPlayer
+import com.example.playlistmaker.Creator
 import com.example.playlistmaker.search.domain.models.Track
 
 
-class MediaPlayer {
+class TrackPlayerImpl : TrackPlayer {
 
-   val mediaPlayer = MediaPlayer()
+
+
+    val mediaPlayer = Creator.createPlayer()
 
     private var playerState = AudioPlayerActivity.STATE_DEFAULT
 
-    fun preparePlayer(track: Track) {
+    override fun preparePlayer(track: Track) {
         mediaPlayer.setDataSource(track.previewUrl)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
@@ -19,6 +21,11 @@ class MediaPlayer {
         mediaPlayer.setOnCompletionListener {
             playerState = AudioPlayerActivity.STATE_PREPARED
         }
+    }
+
+    override fun trackPlay(track: Track, trackStatusObserver: TrackPlayer.TrackStatusObserver) {
+        trackStatusObserver.onProgress(mediaPlayer.currentPosition.toFloat())
+
     }
 
     private fun startPlay() {
@@ -31,7 +38,7 @@ class MediaPlayer {
         playerState = AudioPlayerActivity.STATE_PAUSED
     }
 
-    fun playbackControl() {
+    override fun playbackControl() {
         when (playerState) {
             AudioPlayerActivity.STATE_PLAYING -> {
                 pausePlay()

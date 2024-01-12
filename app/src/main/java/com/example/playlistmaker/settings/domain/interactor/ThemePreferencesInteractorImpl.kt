@@ -1,4 +1,4 @@
-package com.example.playlistmaker.settings.domain
+package com.example.playlistmaker.settings.domain.interactor
 
 import android.content.Context
 import com.example.playlistmaker.settings.data.repository.ThemePreferencesRepositoryImpl

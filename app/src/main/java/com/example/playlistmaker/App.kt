@@ -2,7 +2,7 @@ package com.example.playlistmaker
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.settings.data.repository.ThemePreferencesRepository
+import com.example.playlistmaker.settings.domain.repository.ThemePreferencesRepository
 import com.example.playlistmaker.settings.data.repository.ThemePreferencesRepositoryImpl
 
 const val APP_SETTINGS_DAY_NIGHT_THEMES = "app_settings_day_night_themes"

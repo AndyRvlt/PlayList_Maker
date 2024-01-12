@@ -1,8 +1,7 @@
-package com.example.playlistmaker.search.UI
+package com.example.playlistmaker.search.ui
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -52,9 +51,8 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
     private var clearHistorySearch: Button? = null
     private var historyTrackList: RecyclerView? = null
     private var progressBar: ProgressBar? = null
+    private var textSearchHistory: TextView? = null
 
-
-    private lateinit var sharedPreferences: SharedPreferences
     private lateinit var searchViewModel: SearchViewModel
 
     private fun initViews() {
@@ -71,7 +69,7 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
         storyTrackLiner = findViewById(R.id.storyTrackLiner)
         historyTrackList = findViewById(R.id.historySearch)
         progressBar = findViewById(R.id.progressBar)
-
+        textSearchHistory = findViewById(R.id.textSearchHistory)
     }
 
     val adapter = TracksAdapter(this)
@@ -89,11 +87,11 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
             SearchViewModel.getViewModelFactory()
         )[SearchViewModel::class.java]
 
-        sharedPreferences = getSharedPreferences(TRACK_HISTORY, MODE_PRIVATE)
 
-        searchViewModel.init(sharedPreferences)
+        searchViewModel.init(applicationContext) // не понл
 
         initViews()
+
         historyTrackList?.adapter = adapterHistory
         searchPlayList?.adapter = adapter
 
@@ -115,7 +113,6 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
                 requestTrackList()
                 searchPlayList?.isVisible = true
                 storyTrackLiner?.isVisible = false
-
                 true
             }
             false
@@ -147,6 +144,11 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
 
         searchViewModel.getInitTracksLiveData().observe(this) {
             adapterHistory.updateTracks(it)
+            if (it.isNotEmpty()) {
+                clearHistorySearch?.isVisible = true
+                textSearchHistory?.isVisible = true
+
+            }
         }
 
         searchViewModel.getTracksLiveData()
@@ -160,6 +162,8 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
                         searchPlayList?.isVisible = false
                         searchError?.isVisible = true
                         textErrorNothing?.isVisible = true
+
+
                     } else {
                         searchPlayList?.isVisible = true
                         searchError?.isVisible = false
@@ -175,7 +179,7 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
 
             track?.let {
                 adapterHistory.addTrack(track, trackDataHandler)
-                searchViewModel.writeTracks(sharedPreferences, trackDataHandler)
+                searchViewModel.writeTracks(this, trackDataHandler) // поменял
             }
         }
     }
@@ -228,7 +232,7 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
     }
 
     private fun cleanHistory() {
-        searchViewModel.cleanHistory(sharedPreferences)
+        searchViewModel.cleanHistory(this)
         adapterHistory.updateTracks(emptyList())
         storyTrackLiner?.isVisible = false
     }
@@ -239,7 +243,7 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
             val displayAudioPlayer = Intent(this, AudioPlayerActivity::class.java).apply {
                 putExtra(TRACK_SERIALIZABLE, track)
             }
-            searchViewModel.getTracksPref(sharedPreferences, track)
+            searchViewModel.getTracksPref(this, track)
             startActivity(displayAudioPlayer)
 
         }

@@ -4,6 +4,7 @@ package com.example.playlistmaker.settings.data.repository
 import android.content.Context
 import com.example.playlistmaker.settings.data.preferences.ThemesPreferencesImpl
 import com.example.playlistmaker.settings.domain.ThemesPreferences
+import com.example.playlistmaker.settings.domain.repository.ThemePreferencesRepository
 
 
 class ThemePreferencesRepositoryImpl : ThemePreferencesRepository {

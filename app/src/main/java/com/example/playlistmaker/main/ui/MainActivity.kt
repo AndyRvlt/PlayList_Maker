@@ -1,12 +1,12 @@
-package com.example.playlistmaker.main.UI
+package com.example.playlistmaker.main.ui
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import com.example.playlistmaker.R
-import com.example.playlistmaker.player.UI.AudioPlayerActivity
-import com.example.playlistmaker.search.UI.SearchActivity
+import com.example.playlistmaker.mediateca.ui.MediaActivity
+import com.example.playlistmaker.search.ui.SearchActivity
 import com.example.playlistmaker.settings.UI.SettingsActivity
 
 class MainActivity : AppCompatActivity() {
@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         val buttonSettings = findViewById<Button>(R.id.buttonSettings)
 
         buttonMedia.setOnClickListener {
-            val displayMedia = Intent(this, AudioPlayerActivity::class.java)
+            val displayMedia = Intent(this, MediaActivity::class.java)
             startActivity(displayMedia)
 
         }

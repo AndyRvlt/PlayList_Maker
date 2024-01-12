@@ -1,6 +1,6 @@
-package com.example.playlistmaker.search.UI
+package com.example.playlistmaker.search.ui
 
-import android.content.SharedPreferences
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -31,25 +31,25 @@ class SearchViewModel(
     fun getInitTracksLiveData(): LiveData<List<Track>> = initTracksLiveData
     fun getPrefTracksLiveData(): LiveData<Pair<TrackDataHandler, Track?>> = getPrefTracks
 
-    fun cleanHistory(prefs: SharedPreferences) {
 
-        trackPrefencesInteractor.cleanHistory(prefs)
-
-    }
-
-    fun getTracksPref(prefs: SharedPreferences, track: Track) {
-
-        getPrefTracks.postValue(trackPrefencesInteractor.getTrackPreferences(prefs) to track)
-    }
-
-    fun init(prefs: SharedPreferences) {
-
-        initTracksLiveData.postValue(trackPrefencesInteractor.getTrackPreferences(prefs).tracks)
+    fun cleanHistory(context: Context) {
+        trackPrefencesInteractor.cleanHistory(context)
 
     }
 
-    fun writeTracks(prefs: SharedPreferences, trackDataHandler: TrackDataHandler) {
-        trackPrefencesInteractor.write(trackDataHandler, prefs)
+
+    fun getTracksPref(context: Context, track: Track) {
+        getPrefTracks.postValue(trackPrefencesInteractor.getTrackPreferences(context) to track)
+    }
+
+
+    fun init(context: Context) {
+        initTracksLiveData.postValue(trackPrefencesInteractor.getTrackPreferences(context).tracks)
+
+    }
+
+    fun writeTracks(context: Context, trackDataHandler: TrackDataHandler) {
+        trackPrefencesInteractor.write(context, trackDataHandler)
     }
 
     fun getTracks(searchText: String) {

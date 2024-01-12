@@ -1,18 +1,16 @@
 package com.example.playlistmaker.settings.UI
 
 import android.content.Context
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.playlistmaker.settings.domain.ThemePreferencesInteractor
-import com.example.playlistmaker.settings.domain.ThemePreferencesInteractorImpl
+import com.example.playlistmaker.settings.domain.interactor.ThemePreferencesInteractor
+import com.example.playlistmaker.settings.domain.interactor.ThemePreferencesInteractorImpl
 import com.example.playlistmaker.sharing.data.EmailData
-import com.example.playlistmaker.sharing.domain.SharingInteractor
-import com.example.playlistmaker.sharing.domain.SharingInteractorImpl
+import com.example.playlistmaker.sharing.domain.interactor.SharingInteractor
+import com.example.playlistmaker.sharing.domain.interactor.SharingInteractorImpl
 
 class SettingsViewModel(
+
     private val sharingInteractor: SharingInteractor,
     private val themePreferencesInteractor: ThemePreferencesInteractor,
 ) : ViewModel() {
