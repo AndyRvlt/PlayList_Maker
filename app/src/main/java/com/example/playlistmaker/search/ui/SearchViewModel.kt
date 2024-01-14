@@ -1,14 +1,13 @@
 package com.example.playlistmaker.search.ui
 
-import android.content.Context
+
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.example.playlistmaker.Creator
 import com.example.playlistmaker.search.domain.interactor.GetTracksInteractor
-import com.example.playlistmaker.search.domain.interactor.GetTracksInteractorImpl
-import com.example.playlistmaker.search.domain.interactor.TrackPrefencesInteractorImpl
 import com.example.playlistmaker.search.domain.interactor.TrackPreferencesInteractor
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.domain.models.TrackDataHandler
@@ -32,24 +31,23 @@ class SearchViewModel(
     fun getPrefTracksLiveData(): LiveData<Pair<TrackDataHandler, Track?>> = getPrefTracks
 
 
-    fun cleanHistory(context: Context) {
-        trackPrefencesInteractor.cleanHistory(context)
-
+    fun cleanHistory() {
+        trackPrefencesInteractor.cleanHistory()
     }
 
 
-    fun getTracksPref(context: Context, track: Track) {
-        getPrefTracks.postValue(trackPrefencesInteractor.getTrackPreferences(context) to track)
+    fun getTracksPref(track: Track) {
+        getPrefTracks.postValue(trackPrefencesInteractor.getTrackPreferences() to track)
     }
 
 
-    fun init(context: Context) {
-        initTracksLiveData.postValue(trackPrefencesInteractor.getTrackPreferences(context).tracks)
+    fun init() {
+        initTracksLiveData.postValue(trackPrefencesInteractor.getTrackPreferences().tracks)
 
     }
 
-    fun writeTracks(context: Context, trackDataHandler: TrackDataHandler) {
-        trackPrefencesInteractor.write(context, trackDataHandler)
+    fun writeTracks(trackDataHandler: TrackDataHandler) {
+        trackPrefencesInteractor.write(trackDataHandler)
     }
 
     fun getTracks(searchText: String) {
@@ -75,8 +73,8 @@ class SearchViewModel(
                     extras: CreationExtras,
                 ): T {
                     return SearchViewModel(
-                        GetTracksInteractorImpl(),
-                        TrackPrefencesInteractorImpl()
+                        Creator.createGetTracksInteractor(),
+                        Creator.createTrackPrefencesInteractor()
                     ) as T
                 }
             }

@@ -1,17 +1,11 @@
 package com.example.playlistmaker.settings.domain.interactor
 
-import android.content.Context
-import com.example.playlistmaker.settings.data.repository.ThemePreferencesRepositoryImpl
-import kotlin.Boolean
+import com.example.playlistmaker.Creator
 
 
 class ThemePreferencesInteractorImpl : ThemePreferencesInteractor {
 
-    private val themePreferencesRepoImpl = ThemePreferencesRepositoryImpl()
-
-    override fun init(context: Context) {
-        themePreferencesRepoImpl.init(context)
-    }
+    private val themePreferencesRepoImpl = Creator.createThemePreferencesRepository()
 
     override fun getTheme(): Boolean {
         return themePreferencesRepoImpl.getTheme()

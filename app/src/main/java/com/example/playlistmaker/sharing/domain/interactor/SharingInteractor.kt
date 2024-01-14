@@ -1,13 +1,13 @@
 package com.example.playlistmaker.sharing.domain.interactor
 
-import android.content.Context
+
 import com.example.playlistmaker.sharing.data.EmailData
 
 interface SharingInteractor {
 
-    fun shareApp(context: Context): String
+    fun shareApp(): String
 
-    fun userAgreement(context: Context): String
+    fun userAgreement(): String
 
-    fun getEmailData(context: Context): EmailData
+    fun getEmailData(): EmailData
 }

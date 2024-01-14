@@ -1,16 +1,14 @@
 package com.example.playlistmaker.search.domain.interactor
 
-import android.content.Context
 import com.example.playlistmaker.search.domain.models.TrackDataHandler
 
 interface TrackPreferencesInteractor {
 
-    fun cleanHistory(context: Context)
+    fun cleanHistory()
+
+    fun getTrackPreferences(): TrackDataHandler
 
 
-    fun getTrackPreferences(context: Context): TrackDataHandler
-
-
-    fun write(context: Context, trackDataHandler: TrackDataHandler)
+    fun write(trackDataHandler: TrackDataHandler)
 
 }

@@ -1,14 +1,16 @@
 package com.example.playlistmaker.search.data.repository
 
+import com.example.playlistmaker.Creator
 import com.example.playlistmaker.search.data.dto.TrackRequest
-import com.example.playlistmaker.search.data.network.NetworkClient
-import com.example.playlistmaker.search.data.network.RetrofitNetworkClient
 import com.example.playlistmaker.search.data.response.TrackResponse
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.domain.repository.TrackRepository
 
 class TrackRepositoryImpl : TrackRepository {
-    private val networkClient: NetworkClient = RetrofitNetworkClient()
+
+  //  private val networkClient: NetworkClient = RetrofitNetworkClient()
+
+    private val networkClient = Creator.createRetrofitNetworkClient()
 
     override fun getTracks(expression: String): List<Track> {
         val response = networkClient.doRequest(TrackRequest(expression))

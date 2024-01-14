@@ -1,6 +1,6 @@
-package com.example.playlistmaker.settings.UI
+package com.example.playlistmaker.settings.ui
 
-import android.content.Context
+
 import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.playlistmaker.settings.domain.interactor.ThemePreferencesInteractor
@@ -10,7 +10,6 @@ import com.example.playlistmaker.sharing.domain.interactor.SharingInteractor
 import com.example.playlistmaker.sharing.domain.interactor.SharingInteractorImpl
 
 class SettingsViewModel(
-
     private val sharingInteractor: SharingInteractor,
     private val themePreferencesInteractor: ThemePreferencesInteractor,
 ) : ViewModel() {
@@ -25,28 +24,27 @@ class SettingsViewModel(
     fun emailLiveData(): LiveData<EmailData?> = emailData
     fun shareAppLiveData(): LiveData<String> = shareApp
 
-    fun init(context: Context) {
-        themePreferencesInteractor.init(context)
+    fun init() {
         updateDarkTheme()
-        getUserAgreementLink(context)
-        getEmailData(context)
-        shareApp(context)
+        getUserAgreementLink()
+        getEmailData()
+        shareApp()
     }
 
-    private fun shareApp(context: Context) {
-        shareApp.postValue(sharingInteractor.shareApp(context))
+    private fun shareApp() {
+        shareApp.postValue(sharingInteractor.shareApp())
     }
 
-    private fun getEmailData(context: Context) {
-        emailData.postValue(sharingInteractor.getEmailData(context))
+    private fun getEmailData() {
+        emailData.postValue(sharingInteractor.getEmailData())
     }
 
     private fun updateDarkTheme() {
         isDarkTheme.postValue(themePreferencesInteractor.getTheme())
     }
 
-    fun getUserAgreementLink(context: Context) {
-        userLink.postValue(sharingInteractor.userAgreement(context))
+    fun getUserAgreementLink() {
+        userLink.postValue(sharingInteractor.userAgreement())
     }
 
     companion object {

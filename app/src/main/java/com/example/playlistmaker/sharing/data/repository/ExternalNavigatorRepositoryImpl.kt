@@ -1,6 +1,6 @@
 package com.example.playlistmaker.sharing.data.repository
 
-import android.content.Context
+
 import com.example.playlistmaker.sharing.data.EmailData
 import com.example.playlistmaker.sharing.data.ExternalNavigatorImpl
 import com.example.playlistmaker.sharing.domain.repository.ExternalNavigatorRepository
@@ -8,15 +8,16 @@ import com.example.playlistmaker.sharing.domain.repository.ExternalNavigatorRepo
 class ExternalNavigatorRepositoryImpl : ExternalNavigatorRepository {
     private val externalNavigator = ExternalNavigatorImpl()
 
-    override fun shareLink(context: Context): String {
-        return externalNavigator.shareLink(context)
+
+    override fun shareLink(): String {
+        return externalNavigator.shareLink()
     }
 
-    override fun getLink(context: Context): String {
-        return externalNavigator.getLink(context)
+    override fun getLink(): String {
+        return externalNavigator.getLink()
     }
 
-    override fun getEmailData(context: Context): EmailData {
-        return externalNavigator.openEmail(context)
+    override fun getEmailData(): EmailData {
+        return externalNavigator.openEmail()
     }
 }

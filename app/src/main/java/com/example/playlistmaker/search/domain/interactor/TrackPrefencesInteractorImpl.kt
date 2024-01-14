@@ -1,22 +1,23 @@
 package com.example.playlistmaker.search.domain.interactor
 
-import android.content.Context
-import com.example.playlistmaker.search.data.repository.TrackPreferencesRepositoryImpl
+
 import com.example.playlistmaker.search.domain.models.TrackDataHandler
+import com.example.playlistmaker.search.domain.repository.TrackPreferencesRepository
 
-class TrackPrefencesInteractorImpl() : TrackPreferencesInteractor {
+class TrackPrefencesInteractorImpl(
+    private val trackPreferencesRepository: TrackPreferencesRepository
+) : TrackPreferencesInteractor {
 
-    private val trackPreferencesRepositoryImpl = TrackPreferencesRepositoryImpl()
 
-    override fun cleanHistory(context: Context) {
-        trackPreferencesRepositoryImpl.cleanHistory(context)
+    override fun cleanHistory() {
+        trackPreferencesRepository.cleanHistory()
     }
 
-    override fun getTrackPreferences(context: Context): TrackDataHandler {
-        return trackPreferencesRepositoryImpl.getTrackPreferences(context)
+    override fun getTrackPreferences(): TrackDataHandler {
+        return trackPreferencesRepository.getTrackPreferences()
     }
 
-    override fun write(context: Context, trackDataHandler: TrackDataHandler) {
-        trackPreferencesRepositoryImpl.write(context,trackDataHandler)
+    override fun write(trackDataHandler: TrackDataHandler) {
+        trackPreferencesRepository.write(trackDataHandler)
     }
 }

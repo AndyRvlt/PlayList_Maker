@@ -1,24 +1,24 @@
 package com.example.playlistmaker.sharing.domain.interactor
 
-import android.content.Context
+
+import com.example.playlistmaker.Creator
 import com.example.playlistmaker.sharing.data.EmailData
-import com.example.playlistmaker.sharing.data.repository.ExternalNavigatorRepositoryImpl
 
-class SharingInteractorImpl(
+class SharingInteractorImpl: SharingInteractor {
 
-) : SharingInteractor {
-    private val externalNavigatorRepoImpl = ExternalNavigatorRepositoryImpl()
-    override fun shareApp(context: Context): String {
-        return externalNavigatorRepoImpl.shareLink(context)
+    private val externalNavigatorRepoImpl = Creator.createExternalNavigatorRepository()
+
+    override fun shareApp(): String {
+        return externalNavigatorRepoImpl.shareLink()
 
     }
 
-    override fun userAgreement(context: Context): String {
-        return externalNavigatorRepoImpl.getLink(context)
+    override fun userAgreement( ): String {
+        return externalNavigatorRepoImpl.getLink()
     }
 
-    override fun getEmailData(context: Context): EmailData {
-        return externalNavigatorRepoImpl.getEmailData(context)
+    override fun getEmailData(): EmailData {
+        return externalNavigatorRepoImpl.getEmailData()
     }
 
 }

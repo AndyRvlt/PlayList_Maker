@@ -2,7 +2,6 @@ package com.example.playlistmaker.search.ui
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,12 +10,8 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
@@ -25,8 +20,7 @@ import com.example.playlistmaker.player.UI.AudioPlayerActivity
 import com.example.playlistmaker.player.UI.TRACK_SERIALIZABLE
 import com.example.playlistmaker.search.domain.models.Track
 
-const val TRACK_HISTORY = "track_history"
-const val TRACK = "track"
+
 const val MAX_TRACKS_HISTORY_LIST = 10
 
 
@@ -88,7 +82,7 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
         )[SearchViewModel::class.java]
 
 
-        searchViewModel.init(applicationContext) // не понл
+        searchViewModel.init()
 
         initViews()
 
@@ -179,7 +173,7 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
 
             track?.let {
                 adapterHistory.addTrack(track, trackDataHandler)
-                searchViewModel.writeTracks(this, trackDataHandler) // поменял
+                searchViewModel.writeTracks(trackDataHandler) // поменял
             }
         }
     }
@@ -232,7 +226,7 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
     }
 
     private fun cleanHistory() {
-        searchViewModel.cleanHistory(this)
+        searchViewModel.cleanHistory()
         adapterHistory.updateTracks(emptyList())
         storyTrackLiner?.isVisible = false
     }
@@ -243,7 +237,7 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
             val displayAudioPlayer = Intent(this, AudioPlayerActivity::class.java).apply {
                 putExtra(TRACK_SERIALIZABLE, track)
             }
-            searchViewModel.getTracksPref(this, track)
+            searchViewModel.getTracksPref(track)
             startActivity(displayAudioPlayer)
 
         }

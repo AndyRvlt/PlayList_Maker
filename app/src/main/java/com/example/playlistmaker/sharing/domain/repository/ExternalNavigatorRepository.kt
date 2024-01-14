@@ -1,13 +1,13 @@
 package com.example.playlistmaker.sharing.domain.repository
 
-import android.content.Context
+
 import com.example.playlistmaker.sharing.data.EmailData
 
 interface ExternalNavigatorRepository {
 
-    fun shareLink(context: Context): String
+    fun shareLink(): String
 
-    fun getLink(context: Context): String
+    fun getLink(): String
 
-    fun getEmailData(context: Context): EmailData
+    fun getEmailData(): EmailData
 }

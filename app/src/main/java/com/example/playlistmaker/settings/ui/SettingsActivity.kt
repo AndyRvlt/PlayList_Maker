@@ -1,11 +1,11 @@
-package com.example.playlistmaker.settings.UI
+package com.example.playlistmaker.settings.ui
 
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.App
 import com.example.playlistmaker.R
@@ -33,7 +33,7 @@ class SettingsActivity : AppCompatActivity() {
             SettingsViewModel.getViewModelFactory()
         )[SettingsViewModel::class.java]
 
-        settingsViewModel.init(this)
+        settingsViewModel.init()
 
         settingsViewModel.isDarkThemeLiveData().observe(this) { isDark ->
             themeSwitcher.isChecked = isDark

@@ -1,14 +1,13 @@
 package com.example.playlistmaker.search.domain.repository
 
-import android.content.Context
 import com.example.playlistmaker.search.domain.models.TrackDataHandler
 
 interface TrackPreferencesRepository {
 
-    fun cleanHistory(context: Context)
+    fun cleanHistory()
 
-    fun getTrackPreferences(context: Context): TrackDataHandler
+    fun getTrackPreferences(): TrackDataHandler
 
-    fun write(context: Context, trackDataHandler: TrackDataHandler)
+    fun write(trackDataHandler: TrackDataHandler)
 
 }
