@@ -6,18 +6,20 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.App
 import com.example.playlistmaker.R
 import com.example.playlistmaker.sharing.data.EmailData
 import com.google.android.material.switchmaterial.SwitchMaterial
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SettingsActivity : AppCompatActivity() {
-    lateinit var settingsViewModel: SettingsViewModel
+//    lateinit var settingsViewModel: SettingsViewModel
     private var userEgreement: String = ""
     private var emailData: EmailData? = null
     private var shareApp: String = ""
+
+    private val settingsViewModel by viewModel<SettingsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,10 +30,10 @@ class SettingsActivity : AppCompatActivity() {
         val buttonUserAgreement = findViewById<TextView>(R.id.userAgreement)
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
 
-        settingsViewModel = ViewModelProvider(
-            this,
-            SettingsViewModel.getViewModelFactory()
-        )[SettingsViewModel::class.java]
+//        settingsViewModel = ViewModelProvider(
+//            this,
+//            SettingsViewModel.getViewModelFactory()
+//        )[SettingsViewModel::class.java]
 
         settingsViewModel.init()
 

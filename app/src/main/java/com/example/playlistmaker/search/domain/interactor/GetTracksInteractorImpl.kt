@@ -5,9 +5,8 @@ import java.util.concurrent.Executors
 
 class GetTracksInteractorImpl(
     val trackRepository: TrackRepository
+
 ) : GetTracksInteractor {
-
-
 
     private val executor = Executors.newCachedThreadPool()
 

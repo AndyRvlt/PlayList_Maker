@@ -4,8 +4,6 @@ package com.example.playlistmaker.player.UI
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.playlistmaker.search.domain.models.Track
 
 class AudioPlayerViewModel(
@@ -38,24 +36,5 @@ class AudioPlayerViewModel(
     fun playbackControl() {
         trackPlayer.playbackControl()
     }
-
-
-    companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory =
-            object : ViewModelProvider.Factory {
-
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(
-                    modelClass: Class<T>,
-                    extras: CreationExtras,
-                ): T {
-                    return AudioPlayerViewModel(
-                        TrackPlayerImpl()
-                    ) as T
-                }
-            }
-    }
-
-
 }
 

@@ -2,23 +2,29 @@ package com.example.playlistmaker
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.settings.data.repository.ThemePreferencesRepositoryImpl
+import com.example.playlistmaker.di.dataModule
+import com.example.playlistmaker.di.interactorModule
+import com.example.playlistmaker.di.repositoryModule
+import com.example.playlistmaker.di.viewModelModule
 import com.example.playlistmaker.settings.domain.repository.ThemePreferencesRepository
+import org.koin.android.ext.android.inject
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
-const val APP_SETTINGS_DAY_NIGHT_THEMES = "app_settings_day_night_themes"
-const val KEY_THEMES = "key_themes"
 
 class App : Application() {
 
-
-    private lateinit var repo: ThemePreferencesRepository
+    val repo : ThemePreferencesRepository by inject()
 
     override fun onCreate() {
         super.onCreate()
 
-        Creator.setApplication(this@App)
+        startKoin {
+            androidContext(this@App)
+            modules(dataModule, repositoryModule, interactorModule, viewModelModule)
+        }
 
-        repo = ThemePreferencesRepositoryImpl()
+
         val themeApp = repo.getTheme()
         switchTheme(themeApp)
     }

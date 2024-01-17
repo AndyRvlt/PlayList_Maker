@@ -1,14 +1,13 @@
 package com.example.playlistmaker.player.UI
 
-import com.example.playlistmaker.Creator
+import android.media.MediaPlayer
 import com.example.playlistmaker.search.domain.models.Track
 
 
-class TrackPlayerImpl : TrackPlayer {
+class TrackPlayerImpl(
+      private val mediaPlayer: MediaPlayer
+) : TrackPlayer {
 
-
-
-    val mediaPlayer = Creator.createPlayer()
 
     private var playerState = AudioPlayerActivity.STATE_DEFAULT
 
