@@ -45,21 +45,4 @@ class SettingsViewModel(
     fun getUserAgreementLink() {
         userLink.postValue(sharingInteractor.userAgreement())
     }
-
-//    companion object {
-//        fun getViewModelFactory(): ViewModelProvider.Factory =
-//            object : ViewModelProvider.Factory {
-//
-//                @Suppress("UNCHECKED_CAST")
-//                override fun <T : ViewModel> create(
-//                    modelClass: Class<T>,
-//                    extras: CreationExtras,
-//                ): T {
-//                    return SettingsViewModel(
-//                        SharingInteractorImpl(),
-//                        ThemePreferencesInteractorImpl(),
-//                    ) as T
-//                }
-//            }
-//    }
 }

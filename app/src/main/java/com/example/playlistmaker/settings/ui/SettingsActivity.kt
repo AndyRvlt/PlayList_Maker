@@ -14,7 +14,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SettingsActivity : AppCompatActivity() {
-//    lateinit var settingsViewModel: SettingsViewModel
+
     private var userEgreement: String = ""
     private var emailData: EmailData? = null
     private var shareApp: String = ""
@@ -29,11 +29,6 @@ class SettingsActivity : AppCompatActivity() {
         val buttonArrowBack = findViewById<Button>(R.id.arrowBack)
         val buttonUserAgreement = findViewById<TextView>(R.id.userAgreement)
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
-
-//        settingsViewModel = ViewModelProvider(
-//            this,
-//            SettingsViewModel.getViewModelFactory()
-//        )[SettingsViewModel::class.java]
 
         settingsViewModel.init()
 

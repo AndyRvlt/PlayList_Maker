@@ -13,9 +13,11 @@ val viewModelModule = module {
    viewModel {
        SearchViewModel(get(), get())
    }
+
     viewModel {
        AudioPlayerViewModel(get())
     }
+
     viewModel {
         SettingsViewModel(get(),get())
     }

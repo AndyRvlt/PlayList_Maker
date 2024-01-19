@@ -68,10 +68,6 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
 
     val adapter = TracksAdapter(this)
     val adapterHistory = TracksAdapter(this)
-
-
-
-
     private var searchText = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -164,6 +160,7 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
                     }
                 }
             }
+
         searchViewModel.getPrefTracksLiveData().observe(this) {
             val (trackDataHandler, track) = it
 

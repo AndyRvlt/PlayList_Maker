@@ -20,7 +20,7 @@ val dataModule = module {
 
     single {
         Retrofit.Builder()
-            .baseUrl("https://itunes.apple.com/")
+            .baseUrl(ITUNES)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(TrackApi::class.java)
@@ -54,3 +54,4 @@ val dataModule = module {
 
 const val TRACK = "track"
 const val SETTINGS_DAY_NIGHT = "app_settings_day_night_themes"
+const val ITUNES = "https://itunes.apple.com/"

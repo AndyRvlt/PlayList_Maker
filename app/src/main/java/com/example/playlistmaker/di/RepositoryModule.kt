@@ -22,11 +22,9 @@ val repositoryModule = module {
         TrackPreferencesRepositoryImpl(get())
     }
 
-
     single<ThemePreferencesRepository> {
         ThemePreferencesRepositoryImpl(get())
     }
-
 
     single<ExternalNavigatorRepository> {
         ExternalNavigatorRepositoryImpl(get())
