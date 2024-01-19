@@ -1,13 +1,12 @@
 package com.example.playlistmaker.settings.ui
 
 
-import androidx.lifecycle.*
-import androidx.lifecycle.viewmodel.CreationExtras
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.settings.domain.interactor.ThemePreferencesInteractor
-import com.example.playlistmaker.settings.domain.interactor.ThemePreferencesInteractorImpl
 import com.example.playlistmaker.sharing.data.EmailData
 import com.example.playlistmaker.sharing.domain.interactor.SharingInteractor
-import com.example.playlistmaker.sharing.domain.interactor.SharingInteractorImpl
 
 class SettingsViewModel(
     private val sharingInteractor: SharingInteractor,
@@ -45,22 +44,5 @@ class SettingsViewModel(
 
     fun getUserAgreementLink() {
         userLink.postValue(sharingInteractor.userAgreement())
-    }
-
-    companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory =
-            object : ViewModelProvider.Factory {
-
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(
-                    modelClass: Class<T>,
-                    extras: CreationExtras,
-                ): T {
-                    return SettingsViewModel(
-                        SharingInteractorImpl(),
-                        ThemePreferencesInteractorImpl(),
-                    ) as T
-                }
-            }
     }
 }

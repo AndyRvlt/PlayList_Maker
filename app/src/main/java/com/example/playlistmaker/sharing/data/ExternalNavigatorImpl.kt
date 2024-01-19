@@ -1,29 +1,27 @@
 package com.example.playlistmaker.sharing.data
 
-
-import com.example.playlistmaker.Creator
+import android.content.Context
 import com.example.playlistmaker.R
 import com.example.playlistmaker.sharing.domain.ExternalNavigator
 
-class ExternalNavigatorImpl : ExternalNavigator {
-
-    private val contextProvider = Creator.createContextProvider()
+class ExternalNavigatorImpl(
+    val context: Context
+) : ExternalNavigator {
 
     override fun shareLink(): String {
-        return contextProvider.getString(R.string.android_developer)
+        return context.getString(R.string.android_developer)
     }
 
     override fun getLink(): String {
-
-        return contextProvider.getString(R.string.web)
+        return context.getString(R.string.web)
 
     }
 
     override fun openEmail(): EmailData {
         return EmailData(
-            contextProvider.getString(R.string.yandex_mail),
-            contextProvider.getString(R.string.subjectMessage),
-            contextProvider.getString(R.string.supportMessage)
+            context.getString(R.string.yandex_mail),
+            context.getString(R.string.subjectMessage),
+            context.getString(R.string.supportMessage)
         )
     }
 

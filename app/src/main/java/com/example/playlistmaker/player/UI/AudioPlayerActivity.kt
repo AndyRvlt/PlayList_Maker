@@ -2,6 +2,7 @@ package com.example.playlistmaker.player.UI
 
 
 import android.icu.text.SimpleDateFormat
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -10,14 +11,14 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
 import com.example.playlistmaker.search.data.DateFormater
 import com.example.playlistmaker.search.domain.models.Track
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
 const val TRACK_SERIALIZABLE = "track_Serializable"
@@ -27,12 +28,15 @@ class AudioPlayerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAudioPlayerBinding
     private lateinit var buttonPlay: ImageButton
     private lateinit var buttonPause: ImageButton
-    private lateinit var audioPlayerViewModel: AudioPlayerViewModel
+
 
     private var trackTimePlay: TextView? = null
 
+    private val audioPlayerViewModel by viewModel<AudioPlayerViewModel>()
 
-    val mediaPlayer = Creator.createPlayer()
+    val mediaPlayer: MediaPlayer by inject()
+
+
     val handler = Handler(Looper.getMainLooper())
 
 
@@ -46,10 +50,6 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         buttonPause = findViewById(R.id.button_pause)
 
-        audioPlayerViewModel = ViewModelProvider(
-            this,
-            AudioPlayerViewModel.getViewModelFactory()
-        )[AudioPlayerViewModel::class.java]
 
         binding = ActivityAudioPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)

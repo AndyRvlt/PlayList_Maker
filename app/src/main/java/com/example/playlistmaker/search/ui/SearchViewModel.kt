@@ -4,9 +4,6 @@ package com.example.playlistmaker.search.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.playlistmaker.Creator
 import com.example.playlistmaker.search.domain.interactor.GetTracksInteractor
 import com.example.playlistmaker.search.domain.interactor.TrackPreferencesInteractor
 import com.example.playlistmaker.search.domain.models.Track
@@ -61,23 +58,6 @@ class SearchViewModel(
                 }
             })
         }
-    }
-
-    companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory =
-            object : ViewModelProvider.Factory {
-
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(
-                    modelClass: Class<T>,
-                    extras: CreationExtras,
-                ): T {
-                    return SearchViewModel(
-                        Creator.createGetTracksInteractor(),
-                        Creator.createTrackPrefencesInteractor()
-                    ) as T
-                }
-            }
     }
 
 }

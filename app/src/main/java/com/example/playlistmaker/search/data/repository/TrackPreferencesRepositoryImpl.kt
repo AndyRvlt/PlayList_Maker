@@ -5,19 +5,21 @@ import com.example.playlistmaker.search.domain.models.TrackDataHandler
 import com.example.playlistmaker.search.domain.repository.TrackPreferencesRepository
 
 
-class TrackPreferencesRepositoryImpl : TrackPreferencesRepository {
+class TrackPreferencesRepositoryImpl(
+    private val trackPreferences: TrackPreferences
+) : TrackPreferencesRepository {
 
     override fun cleanHistory() {
-        val trackDataHandler = TrackPreferences.read()
+        val trackDataHandler = trackPreferences.read()
         trackDataHandler.tracks.clear()
-        TrackPreferences.write(trackDataHandler)
+        trackPreferences.write(trackDataHandler)
     }
 
     override fun getTrackPreferences(): TrackDataHandler {
-        return TrackPreferences.read()
+        return trackPreferences.read()
     }
 
     override fun write(trackDataHandler: TrackDataHandler) {
-        TrackPreferences.write(trackDataHandler)
+        trackPreferences.write(trackDataHandler)
     }
 }

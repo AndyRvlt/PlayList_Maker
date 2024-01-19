@@ -1,16 +1,17 @@
 package com.example.playlistmaker.settings.data.preferences
 
-import com.example.playlistmaker.search.data.preferences.DayNightThemesPrefs
 import com.example.playlistmaker.settings.domain.ThemesPreferences
 
-class ThemesPreferencesImpl : ThemesPreferences {
+class ThemesPreferencesImpl(
+   private val dayNightThemesPrefs: DayNightThemesPrefs
+) : ThemesPreferences {
 
     override fun getTheme(): Boolean {
-        return DayNightThemesPrefs.getTheme()
+        return dayNightThemesPrefs.getTheme()
     }
 
     override fun putTheme(putThemePref: Boolean) {
-        DayNightThemesPrefs.putTheme(putThemePref)
+        dayNightThemesPrefs.putTheme(putThemePref)
     }
 
 }

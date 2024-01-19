@@ -13,12 +13,12 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.player.UI.AudioPlayerActivity
 import com.example.playlistmaker.player.UI.TRACK_SERIALIZABLE
 import com.example.playlistmaker.search.domain.models.Track
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 const val MAX_TRACKS_HISTORY_LIST = 10
@@ -47,7 +47,7 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
     private var progressBar: ProgressBar? = null
     private var textSearchHistory: TextView? = null
 
-    private lateinit var searchViewModel: SearchViewModel
+    private val searchViewModel by viewModel<SearchViewModel>()
 
     private fun initViews() {
         search = findViewById(R.id.search)
@@ -68,19 +68,11 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
 
     val adapter = TracksAdapter(this)
     val adapterHistory = TracksAdapter(this)
-
-
     private var searchText = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-
-        searchViewModel = ViewModelProvider(
-            this,
-            SearchViewModel.getViewModelFactory()
-        )[SearchViewModel::class.java]
-
 
         searchViewModel.init()
 
@@ -168,6 +160,7 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
                     }
                 }
             }
+
         searchViewModel.getPrefTracksLiveData().observe(this) {
             val (trackDataHandler, track) = it
 
