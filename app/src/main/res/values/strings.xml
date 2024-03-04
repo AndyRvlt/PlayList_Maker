@@ -24,4 +24,9 @@
     <string name="ear">Год</string>
     <string name="album">Альбом</string>
     <string name="duration">Длительность</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="text_new_playlist_fragment">Вы не создали \n ни одного плейлиста</string>
+    <string name="button_text_playlist_fragment">Новый плейлист</string>
+    <string name="text_mediateca_fragment">Ваша медиатека пуста</string>
 </resources>
