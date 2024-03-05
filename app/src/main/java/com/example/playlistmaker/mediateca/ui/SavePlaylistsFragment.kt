@@ -6,10 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.FragmentSavePlaylistsBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SavePlaylistsFragment : Fragment() {
+    private lateinit var binding: FragmentSavePlaylistsBinding
 
     private val savePlaylistViewModel by viewModel<SavePlaylistViewModel>()
 
@@ -17,14 +19,14 @@ class SavePlaylistsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        binding = FragmentSavePlaylistsBinding.inflate(inflater, container, false)
+        return binding.root
 
-        return inflater.inflate(R.layout.fragment_save_playlists, container, false)
     }
 
 
     companion object {
 
-        @JvmStatic
         fun newInstance() = SavePlaylistsFragment()
 
     }

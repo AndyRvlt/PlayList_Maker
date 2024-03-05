@@ -106,7 +106,8 @@
         <item name="android:background">@color/white</item>
         <item name="tabTextColor">@color/Day_night_black_white_color</item>
         <item name="tabIndicatorColor">@color/Day_night_black_white_color</item>
+        <item name="tabIndicatorFullWidth">false</item>
+        <item name="tabMode">fixed</item>
     </style>
-
 
 </resources>
