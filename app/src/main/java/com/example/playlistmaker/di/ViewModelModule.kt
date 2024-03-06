@@ -1,6 +1,9 @@
 package com.example.playlistmaker.di
 
 import android.media.MediaPlayer
+import com.example.playlistmaker.mediateca.ui.FavoriteTracksViewModel
+import com.example.playlistmaker.mediateca.ui.MediatecaViewModel
+import com.example.playlistmaker.mediateca.ui.SavePlaylistViewModel
 import com.example.playlistmaker.player.UI.AudioPlayerViewModel
 import com.example.playlistmaker.player.UI.TrackPlayer
 import com.example.playlistmaker.player.UI.TrackPlayerImpl
@@ -10,16 +13,25 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
-   viewModel {
-       SearchViewModel(get(), get())
-   }
-
     viewModel {
-       AudioPlayerViewModel(get())
+        SearchViewModel(get(), get())
     }
 
     viewModel {
-        SettingsViewModel(get(),get())
+        AudioPlayerViewModel(get())
+    }
+
+    viewModel {
+        SettingsViewModel(get(), get())
+    }
+    viewModel {
+        MediatecaViewModel()
+    }
+    viewModel {
+        SavePlaylistViewModel()
+    }
+    viewModel {
+        FavoriteTracksViewModel()
     }
 
     single { MediaPlayer() }
@@ -27,5 +39,6 @@ val viewModelModule = module {
     single<TrackPlayer> {
         TrackPlayerImpl(get())
     }
+
 
 }

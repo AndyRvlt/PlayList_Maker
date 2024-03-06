@@ -96,4 +96,18 @@
         <item name="android:visibility">gone</item>
 
     </style>
+
+
+    <style name="TabLayoutMediateca" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+        <item name="tabTextAppearance">@android:style/TextAppearance.Widget.TabWidget</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:background">@color/white</item>
+        <item name="tabTextColor">@color/Day_night_black_white_color</item>
+        <item name="tabIndicatorColor">@color/Day_night_black_white_color</item>
+        <item name="tabIndicatorFullWidth">false</item>
+        <item name="tabMode">fixed</item>
+    </style>
+
 </resources>
