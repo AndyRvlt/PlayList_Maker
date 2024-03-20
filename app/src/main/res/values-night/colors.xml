@@ -13,5 +13,6 @@
     <color name="Day_night_background_color_main_activity">#1A1B22</color>
     <color name="Day_night_black_white_color">#FFFFFFFF</color>
     <color name="Day_night_gray_white">#FFFFFFFF</color>
-    <color name="Day_night_background_color_media_activity">#1A1B22</color>
+    <color name="Day_night_background_color_fragments">#1A1B22</color>
+    <color name="bottom_navigation_menu_off_checked">#FFFFFFFF</color>
 </resources>

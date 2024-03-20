@@ -7,24 +7,22 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.player.UI.AudioPlayerActivity
 import com.example.playlistmaker.player.UI.TRACK_SERIALIZABLE
 import com.example.playlistmaker.search.domain.models.Track
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-
-const val MAX_TRACKS_HISTORY_LIST = 10
-
-
-class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
+class SearchFragment : Fragment(), TracksAdapter.TrackListener {
 
     companion object {
         private const val SEARCH_TEXT = "SEARCH_TEXT"
@@ -34,7 +32,6 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
 
     private var search: EditText? = null
     private var clearIcon: ImageView? = null
-    private var buttonArrowBack: Button? = null
     private var searchError: ImageView? = null
     private var searchPlayList: RecyclerView? = null
     private var textErrorNothing: TextView? = null
@@ -49,30 +46,45 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
 
     private val searchViewModel by viewModel<SearchViewModel>()
 
+    private lateinit var binding: FragmentSearchBinding
+
+
     private fun initViews() {
-        search = findViewById(R.id.search)
-        clearIcon = findViewById(R.id.clearIcon)
-        buttonArrowBack = findViewById(R.id.arrowBack)
-        searchPlayList = findViewById(R.id.searchPlayList)
-        textErrorNothing = findViewById(R.id.textErrorNothing)
-        searchError = findViewById(R.id.searchError)
-        searchServerError = findViewById(R.id.searchServerError)
-        textServerError = findViewById(R.id.textServerError)
-        update = findViewById(R.id.update)
-        clearHistorySearch = findViewById(R.id.clear_history_search)
-        storyTrackLiner = findViewById(R.id.storyTrackLiner)
-        historyTrackList = findViewById(R.id.historySearch)
-        progressBar = findViewById(R.id.progressBar)
-        textSearchHistory = findViewById(R.id.textSearchHistory)
+        search = binding.search
+        clearIcon = binding.clearIcon
+        searchPlayList = binding.searchPlayList
+        textErrorNothing = binding.textErrorNothing
+        searchError = binding.searchError
+        searchServerError = binding.searchServerError
+        textServerError = binding.textServerError
+        update = binding.update
+        progressBar = binding.progressBar
+        clearHistorySearch = binding.storyTrack.clearHistorySearch
+        storyTrackLiner = binding.storyTrack.storyTrackLiner
+        historyTrackList = binding.storyTrack.historySearch
+        textSearchHistory = binding.storyTrack.textSearchHistory
+
     }
 
-    val adapter = TracksAdapter(this)
-    val adapterHistory = TracksAdapter(this)
+    val adapter = TracksAdapter(this) //????
+    val adapterHistory = TracksAdapter(this)//????
+
     private var searchText = ""
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        searchText = savedInstanceState?.getString(SEARCH_TEXT, "") ?: ""
 
         searchViewModel.init()
 
@@ -90,16 +102,11 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
             requestTrackList()
         }
 
-        buttonArrowBack?.setOnClickListener {
-            finish()
-        }
-
         search?.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 requestTrackList()
                 searchPlayList?.isVisible = true
                 storyTrackLiner?.isVisible = false
-                true
             }
             false
         }
@@ -108,7 +115,7 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
             searchText = ""
             search?.setText(searchText)
             val inputMethodManager =
-                getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(clearIcon?.windowToken, 0)
             adapter.updateTracks(emptyList())
         }
@@ -117,18 +124,19 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 clearIcon?.visibility = clearButtonVisibility(s)
                 searchText = search?.text.toString()
-
-                searchDebounce()
+                if (s.isNotEmpty()) {
+                    searchDebounce()
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {}
         }
         search?.addTextChangedListener(searchTextWatcher)
 
-        searchViewModel.getInitTracksLiveData().observe(this) {
+        searchViewModel.getInitTracksLiveData().observe(viewLifecycleOwner) {
             adapterHistory.updateTracks(it)
             if (it.isNotEmpty()) {
                 clearHistorySearch?.isVisible = true
@@ -138,7 +146,7 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
         }
 
         searchViewModel.getTracksLiveData()
-            .observe(this) { tracks ->
+            .observe(viewLifecycleOwner) { tracks ->
 
                 progressBar?.isVisible = false
 
@@ -161,7 +169,7 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
                 }
             }
 
-        searchViewModel.getPrefTracksLiveData().observe(this) {
+        searchViewModel.getPrefTracksLiveData().observe(viewLifecycleOwner) {
             val (trackDataHandler, track) = it
 
             track?.let {
@@ -195,10 +203,6 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
         outState.putString(SEARCH_TEXT, searchText)
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        searchText = savedInstanceState.getString(SEARCH_TEXT, "")
-    }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
         return if (s.isNullOrEmpty()) {
@@ -227,12 +231,14 @@ class SearchActivity : AppCompatActivity(), TracksAdapter.TrackListener {
 
     override fun onClick(track: Track) {
         if (clickDebounce()) {
-            val displayAudioPlayer = Intent(this, AudioPlayerActivity::class.java).apply {
-                putExtra(TRACK_SERIALIZABLE, track)
-            }
+            val displayAudioPlayer =
+                Intent(requireContext(), AudioPlayerActivity::class.java).apply {
+                    putExtra(TRACK_SERIALIZABLE, track)
+                }
             searchViewModel.getTracksPref(track)
             startActivity(displayAudioPlayer)
 
         }
     }
 }
+

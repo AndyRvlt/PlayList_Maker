@@ -4,17 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/Day_night_background_color_fragments"
     android:orientation="vertical"
-    android:paddingTop="4dp">
+    android:paddingTop="4dp"
+    tools:context=".search.ui.SearchFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/arrowBack"
-            style="@style/ButtonArrowBack" />
 
         <TextView
             style="@style/TopText"
@@ -107,6 +106,8 @@
         android:id="@+id/update"
         style="@style/Update" />
 
-    <include layout="@layout/story_track_searh" />
+    <include
+        android:id="@+id/story_track"
+        layout="@layout/story_track_searh" />
 
 </LinearLayout>
