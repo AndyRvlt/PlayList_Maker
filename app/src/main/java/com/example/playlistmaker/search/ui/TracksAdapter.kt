@@ -7,7 +7,10 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.domain.models.TrackDataHandler
 
+const val MAX_TRACKS_HISTORY_LIST = 10
+
 class TracksAdapter(val trackListener: TrackListener) : RecyclerView.Adapter<TrackViewHolder>() {
+
     private var tracks: MutableList<Track> = mutableListOf()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context)

@@ -27,7 +27,7 @@
     <string name="text_new_playlist_fragment">Вы не создали \n ни одного плейлиста</string>
     <string name="button_text_playlist_fragment">Новый плейлист</string>
     <string name="text_mediateca_fragment">Ваша медиатека пуста</string>
-    <string name="favorite_tracks">Избраные треки</string>
+    <string name="favorite_tracks">Избранные треки</string>
     <string name="playlists">Плейлисты</string>
     <string name="mediateca">Медиатека</string>
 </resources>

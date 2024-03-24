@@ -34,7 +34,7 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     private val audioPlayerViewModel by viewModel<AudioPlayerViewModel>()
 
-    val mediaPlayer: MediaPlayer by inject()
+    private val mediaPlayer: MediaPlayer by inject()
 
 
     val handler = Handler(Looper.getMainLooper())
@@ -132,7 +132,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         super.onDestroy()
         handler.removeCallbacksAndMessages(null)
         mediaPlayer.stop()
-        mediaPlayer.release()
+        mediaPlayer.reset()
     }
 
     companion object {
@@ -142,6 +142,5 @@ class AudioPlayerActivity : AppCompatActivity() {
         const val STATE_DEFAULT = 0
         const val DELEY = 1000L
     }
-
 
 }
