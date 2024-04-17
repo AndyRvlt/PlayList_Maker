@@ -3,8 +3,6 @@ package com.example.playlistmaker.search.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -14,11 +12,14 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
+import androidx.lifecycle.lifecycleScope
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.player.UI.AudioPlayerActivity
 import com.example.playlistmaker.player.UI.TRACK_SERIALIZABLE
 import com.example.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment(), TracksAdapter.TrackListener {
@@ -152,26 +153,34 @@ class SearchFragment : Fragment(), TracksAdapter.TrackListener {
     }
 
     private var isClickAllowed = true
-    private val handler = Handler(Looper.getMainLooper())
 
     private fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
+
         }
         return current
     }
 
-    private val searchRunnable = Runnable { requestTrackList() }
+
+    var job: Job? = null
 
     private fun searchDebounce() {
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+        job?.cancel()
+        job = viewLifecycleOwner.lifecycleScope.launch {
+            delay(SEARCH_DEBOUNCE_DELAY)
+            requestTrackList()
+        }
     }
 
+
     private fun searchNonWords() {
-        handler.removeCallbacks(searchRunnable)
+        job?.cancel()
         binding.searchPlayList.isVisible = false
         binding.storyTrack.historySearch.isVisible = true
         binding.storyTrack.storyTrackLiner.isVisible = true
@@ -211,7 +220,6 @@ class SearchFragment : Fragment(), TracksAdapter.TrackListener {
         adapterHistory.updateTracks(emptyList())
         binding.storyTrack.storyTrackLiner.isVisible = false
     }
-
 
     override fun onClick(track: Track) {
         if (clickDebounce()) {

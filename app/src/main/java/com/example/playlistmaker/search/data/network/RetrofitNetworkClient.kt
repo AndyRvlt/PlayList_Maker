@@ -2,18 +2,25 @@ package com.example.playlistmaker.search.data.network
 
 import com.example.playlistmaker.search.data.dto.Response
 import com.example.playlistmaker.search.data.dto.TrackRequest
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class RetrofitNetworkClient(
      private val trackService: TrackApi
 ) : NetworkClient {
 
-    override fun doRequest(dto: Any): Response {
+    override  suspend fun doRequest(dto: Any): Response {
         if (dto is TrackRequest) {
-            val resp = trackService.search(dto.expression).execute()
 
-            val body = resp.body() ?: Response()
 
-            return body.apply { resultCode = resp.code() }
+            return withContext(Dispatchers.IO){
+                try {
+                    val resp = trackService.search(dto.expression)
+                    resp.apply { resultCode = 200 }
+                } catch (e:Throwable){
+                    Response().apply { resultCode = 500 }
+                }
+            }
 
         } else {
             return Response().apply { resultCode = 400 }

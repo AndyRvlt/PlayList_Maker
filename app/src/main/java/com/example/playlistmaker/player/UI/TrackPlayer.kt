@@ -10,6 +10,8 @@ interface TrackPlayer {
 
     fun playbackControl()
 
+    fun reset()
+
     interface TrackStatusObserver {
 
         fun onProgress (progress: Float)

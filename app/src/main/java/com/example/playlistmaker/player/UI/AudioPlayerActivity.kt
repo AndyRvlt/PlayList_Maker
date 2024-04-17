@@ -79,7 +79,6 @@ class AudioPlayerActivity : AppCompatActivity() {
                 audioPlayerViewModel.playbackControl()
                 audioPlayerViewModel.play(item)
                 buttonPause.isVisible = true
-
             }
 
             buttonPause.setOnClickListener {
@@ -89,17 +88,21 @@ class AudioPlayerActivity : AppCompatActivity() {
 
             }
 
-            val myRunnable = object : Runnable {
-                override fun run() {
-                    audioPlayerViewModel.play(item)
-                    handler.postDelayed(this, DELEY)
-                }
-            }
+//            val myRunnable = object : Runnable {
+//                override fun run() {
+//                    audioPlayerViewModel.play(item)
+//                    handler.postDelayed(this, DELEY)
+//                }
+//            }
 
-            handler.post(myRunnable)
+//            handler.post(myRunnable)
+
+            audioPlayerViewModel.play(item)
 
             mediaPlayer.setOnCompletionListener {
-                handler.removeCallbacks(myRunnable)
+//                handler.removeCallbacks(myRunnable)
+                audioPlayerViewModel.stopPlay()
+
                 trackTimePlay?.text = SimpleDateFormat("mm:ss", Locale.getDefault())
                     .format(0)
                 buttonPlay.isVisible = true
@@ -130,7 +133,6 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        handler.removeCallbacksAndMessages(null)
         mediaPlayer.stop()
         mediaPlayer.reset()
     }
