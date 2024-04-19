@@ -5,9 +5,8 @@ import com.example.playlistmaker.search.domain.models.Track
 
 
 class TrackPlayerImpl(
-      private val mediaPlayer: MediaPlayer
+    private val mediaPlayer: MediaPlayer
 ) : TrackPlayer {
-
 
     private var playerState = AudioPlayerActivity.STATE_DEFAULT
 
@@ -25,6 +24,11 @@ class TrackPlayerImpl(
     override fun trackPlay(track: Track, trackStatusObserver: TrackPlayer.TrackStatusObserver) {
         trackStatusObserver.onProgress(mediaPlayer.currentPosition.toFloat())
 
+    }
+
+    override fun reset() {
+        pausePlay()
+        mediaPlayer.seekTo(0)
     }
 
     private fun startPlay() {
@@ -48,4 +52,5 @@ class TrackPlayerImpl(
             }
         }
     }
+
 }
