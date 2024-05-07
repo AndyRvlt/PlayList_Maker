@@ -36,13 +36,17 @@ class TracksAdapter(val trackListener: TrackListener) : RecyclerView.Adapter<Tra
                 trackDataHandler.tracks.add(0, track)
                 notifyItemInserted(0)
             } else {
-                notifyItemMoved(tracks.indexOf(track), 0)
-                tracks.removeAt(tracks.indexOf(track))
-                tracks.add(0, track)
-                trackDataHandler.tracks.apply {
-                    removeAt(indexOf(track))
-                    add(0, track)
+                val index = tracks.indexOf(track)
+                if (index != -1) {
+                    notifyItemMoved(tracks.indexOf(track), 0)
+                    tracks.removeAt(tracks.indexOf(track))
+                    tracks.add(0, track)
+                    trackDataHandler.tracks.apply {
+                        removeAt(indexOf(track))
+                        add(0, track)
+                    }
                 }
+
             }
         } else {
             trackDataHandler.tracks.removeLast()

@@ -27,7 +27,7 @@ class SearchFragment : Fragment(), TracksAdapter.TrackListener {
     companion object {
         private const val SEARCH_TEXT = "SEARCH_TEXT"
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 
     private val searchViewModel by viewModel<SearchViewModel>()

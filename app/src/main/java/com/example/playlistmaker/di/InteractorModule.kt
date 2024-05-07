@@ -1,5 +1,7 @@
 package com.example.playlistmaker.di
 
+import com.example.playlistmaker.db.domain.FavoritesTracksInteractor
+import com.example.playlistmaker.db.domain.FavoritesTracksInteractorImpl
 import com.example.playlistmaker.search.domain.interactor.GetTracksInteractor
 import com.example.playlistmaker.search.domain.interactor.GetTracksInteractorImpl
 import com.example.playlistmaker.search.domain.interactor.TrackPrefencesInteractorImpl
@@ -25,6 +27,9 @@ val interactorModule = module {
     }
     single<ThemePreferencesInteractor> {
         ThemePreferencesInteractorImpl(get())
+    }
+    single<FavoritesTracksInteractor> {
+        FavoritesTracksInteractorImpl(get())
     }
 
 }

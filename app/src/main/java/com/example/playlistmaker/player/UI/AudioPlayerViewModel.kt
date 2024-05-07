@@ -5,22 +5,22 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.db.domain.FavoritesTracksInteractor
 import com.example.playlistmaker.search.domain.models.Track
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 
 class AudioPlayerViewModel(
-    private val trackPlayer: TrackPlayer
+    private val trackPlayer: TrackPlayer,
+    private val favoritesTracksInteractor: FavoritesTracksInteractor
 ) : ViewModel() {
 
     private var timerJob: Job? = null
 
-    private var playStatusLiveData = MutableLiveData(PlayStatus(false, 0f))
+    private var state =
+        MutableLiveData(AudioPlayerState(track = null, playState = PlayStatus(false, 0f)))
 
-
-    fun getPlayStatusLiveData(): LiveData<PlayStatus> = playStatusLiveData
+    fun getStateLiveData(): LiveData<AudioPlayerState> = state
 
 
     fun play(track: Track) {
@@ -30,10 +30,12 @@ class AudioPlayerViewModel(
             trackPlayer.trackPlay(track,
                 trackStatusObserver = object : TrackPlayer.TrackStatusObserver {
                     override fun onProgress(progress: Float) {
-                        playStatusLiveData.postValue(
-                            playStatusLiveData.value?.copy(
-                                onPlayProgressStatus = progress
-                            )
+                        state.postValue(
+                            state.value?.let {
+                                it.copy(
+                                    playState = it.playState.copy(onPlayProgressStatus = progress)
+                                )
+                            }
                         )
                     }
                 }
@@ -57,6 +59,39 @@ class AudioPlayerViewModel(
     fun playbackControl() {
         trackPlayer.playbackControl()
     }
+
+
+    fun onFavoriteClicked() {
+        viewModelScope.launch(Dispatchers.IO) {
+            state.value?.let {
+                state.postValue(
+                    it.copy(
+                        track = it.track?.copy(isFavorite = !it.track.isFavorite)
+                    )
+                )
+                if (it.track != null) {
+                    if (!it.track.isFavorite) {
+                        favoritesTracksInteractor.addFavoriteTrack(it.track)
+                    } else {
+                        favoritesTracksInteractor.deleteFavoriteTrack(it.track)
+                    }
+                }
+            }
+        }
+    }
+
+    fun saveTrack(track: Track) {
+        state.postValue(
+            state.value?.copy(
+                track = track
+            )
+        )
+    }
+
+    data class AudioPlayerState(
+        val track: Track?,
+        val playState: PlayStatus
+    )
 
 }
 

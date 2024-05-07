@@ -4,11 +4,6 @@ package com.example.playlistmaker.player.UI
 import android.icu.text.SimpleDateFormat
 import android.media.MediaPlayer
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
@@ -24,37 +19,22 @@ import java.util.*
 const val TRACK_SERIALIZABLE = "track_Serializable"
 
 class AudioPlayerActivity : AppCompatActivity() {
-    private lateinit var buttonArrowBack: Button
+
     private lateinit var binding: ActivityAudioPlayerBinding
-    private lateinit var buttonPlay: ImageButton
-    private lateinit var buttonPause: ImageButton
-
-
-    private var trackTimePlay: TextView? = null
 
     private val audioPlayerViewModel by viewModel<AudioPlayerViewModel>()
 
     private val mediaPlayer: MediaPlayer by inject()
 
-
-    val handler = Handler(Looper.getMainLooper())
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_audio_player)
-
-        trackTimePlay = findViewById(R.id.track_time_play)
-
-        buttonPlay = findViewById(R.id.button_play)
-
-        buttonPause = findViewById(R.id.button_pause)
-
 
         binding = ActivityAudioPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val item = intent.getSerializableExtra(TRACK_SERIALIZABLE) as Track
+        audioPlayerViewModel.saveTrack(item)
 
 
         audioPlayerViewModel.getPreparePlayer(item)
@@ -88,46 +68,49 @@ class AudioPlayerActivity : AppCompatActivity() {
 
             }
 
-//            val myRunnable = object : Runnable {
-//                override fun run() {
-//                    audioPlayerViewModel.play(item)
-//                    handler.postDelayed(this, DELEY)
-//                }
-//            }
-
-//            handler.post(myRunnable)
-
             audioPlayerViewModel.play(item)
 
             mediaPlayer.setOnCompletionListener {
-//                handler.removeCallbacks(myRunnable)
                 audioPlayerViewModel.stopPlay()
 
-                trackTimePlay?.text = SimpleDateFormat("mm:ss", Locale.getDefault())
+                trackTimePlay.text = SimpleDateFormat("mm:ss", Locale.getDefault())
                     .format(0)
                 buttonPlay.isVisible = true
                 buttonPause.isVisible = false
             }
 
-            audioPlayerViewModel.getPlayStatusLiveData()
-                .observe(this@AudioPlayerActivity) { playStatus ->
-                    trackTimePlay?.text = SimpleDateFormat("mm:ss", Locale.getDefault())
-                        .format(playStatus.onPlayProgressStatus)
+            audioPlayerViewModel.getStateLiveData()
+                .observe(this@AudioPlayerActivity) { state ->
+                    trackTimePlay.text = SimpleDateFormat("mm:ss", Locale.getDefault())
+                        .format(state.playState.onPlayProgressStatus)
                 }
 
+            arrowBack.setOnClickListener {
+                finish()
+            }
+
+            buttonLike.setOnClickListener {
+                audioPlayerViewModel.onFavoriteClicked()
+
+            }
+            buttonLikeOn.setOnClickListener {
+                audioPlayerViewModel.onFavoriteClicked()
+            }
         }
 
-        buttonArrowBack = findViewById(R.id.arrowBack)
-
-        buttonArrowBack.setOnClickListener {
-            finish()
+        audioPlayerViewModel.getStateLiveData().observe(this@AudioPlayerActivity) {
+            val isFavorite = (it.track)?.run {
+                isFavorite
+            } ?: false
+            binding.buttonLike.isVisible = !isFavorite
+            binding.buttonLikeOn.isVisible = isFavorite
         }
     }
 
     override fun onStop() {
         super.onStop()
-        buttonPlay.isVisible = true
-        buttonPause.isVisible = false
+        binding.buttonPlay.isVisible = true
+        binding.buttonPause.isVisible = false
         mediaPlayer.pause()
     }
 
