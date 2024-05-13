@@ -17,24 +17,21 @@ class AudioPlayerViewModel(
 
     private var timerJob: Job? = null
 
-    private var state =
-        MutableLiveData(AudioPlayerState(track = null, playState = PlayStatus(false, 0f)))
+    private var trackState: MutableLiveData<Track?> = MutableLiveData(null)
+    private var audioState: MutableLiveData<PlayStatus> = MutableLiveData(PlayStatus(false, 0f))
 
-    fun getStateLiveData(): LiveData<AudioPlayerState> = state
-
+    fun getTrackStateLiveData(): LiveData<Track?> = trackState
+    fun getAudioStateLiveData(): LiveData<PlayStatus> = audioState
 
     fun play(track: Track) {
-
         timerJob = viewModelScope.launch {
             delay(1000L)
             trackPlayer.trackPlay(track,
                 trackStatusObserver = object : TrackPlayer.TrackStatusObserver {
                     override fun onProgress(progress: Float) {
-                        state.postValue(
-                            state.value?.let {
-                                it.copy(
-                                    playState = it.playState.copy(onPlayProgressStatus = progress)
-                                )
+                        audioState.postValue(
+                            audioState.value?.let {
+                                it.copy(onPlayProgressStatus = progress)
                             }
                         )
                     }
@@ -52,7 +49,6 @@ class AudioPlayerViewModel(
     }
 
     fun getPreparePlayer(track: Track) {
-
         trackPlayer.preparePlayer(track)
     }
 
@@ -63,35 +59,23 @@ class AudioPlayerViewModel(
 
     fun onFavoriteClicked() {
         viewModelScope.launch(Dispatchers.IO) {
-            state.value?.let {
-                state.postValue(
-                    it.copy(
-                        track = it.track?.copy(isFavorite = !it.track.isFavorite)
-                    )
-                )
-                if (it.track != null) {
-                    if (!it.track.isFavorite) {
-                        favoritesTracksInteractor.addFavoriteTrack(it.track)
-                    } else {
-                        favoritesTracksInteractor.deleteFavoriteTrack(it.track)
-                    }
+            trackState.value?.let {
+                val track = it.apply { this.isFavorite = !it.isFavorite }
+
+                if (track.isFavorite) {
+                    favoritesTracksInteractor.addFavoriteTrack(track)
+                } else {
+                    favoritesTracksInteractor.deleteFavoriteTrack(track)
                 }
+                trackState.postValue(track)
             }
+
         }
     }
 
     fun saveTrack(track: Track) {
-        state.postValue(
-            state.value?.copy(
-                track = track
-            )
-        )
+        trackState.postValue(track)
     }
-
-    data class AudioPlayerState(
-        val track: Track?,
-        val playState: PlayStatus
-    )
 
 }
 

@@ -15,7 +15,6 @@ class TrackRepositoryImpl(
 ) : TrackRepository {
 
     override fun getTracks(expression: String): Flow<List<Track>> = flow {
-
         val response = networkClient.doRequest(TrackRequest(expression))
 
         val dbIdTracks = tracksDatabase.trackDao().getTracksIdList()
@@ -33,8 +32,8 @@ class TrackRepositoryImpl(
                     primaryGenreName = it.primaryGenreName,
                     country = it.country,
                     previewUrl = it.previewUrl,
-                    isFavorite = dbIdTracks.find { trackId -> it.trackId == trackId } != null
-                )
+//                    isFavorite = dbIdTracks.find { trackId -> it.trackId == trackId } != null
+                ).apply { this.isFavorite = dbIdTracks.find { trackId -> it.trackId == trackId } != null }
             }
 
             emit(data)

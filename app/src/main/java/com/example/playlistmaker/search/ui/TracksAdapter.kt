@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.domain.models.Track
-import com.example.playlistmaker.search.domain.models.TrackDataHandler
 
 const val MAX_TRACKS_HISTORY_LIST = 10
 
@@ -22,18 +21,18 @@ class TracksAdapter(val trackListener: TrackListener) : RecyclerView.Adapter<Tra
     }
 
     override fun getItemCount() = tracks.size
+
     fun updateTracks(tracks: List<Track>) {
-        this.tracks = tracks.toMutableList()
+        this.tracks = tracks.toSet().toMutableList()
         notifyDataSetChanged()
     }
 
-    fun addTrack(track: Track, trackDataHandler: TrackDataHandler) {
+    fun addTrack(track: Track) {
         val foundTrack = tracks.find { it.trackId == track.trackId }
 
-        if (trackDataHandler.tracks.size < MAX_TRACKS_HISTORY_LIST) {
+        if (tracks.size < MAX_TRACKS_HISTORY_LIST) {
             if (foundTrack == null) {
                 tracks.add(0, track)
-                trackDataHandler.tracks.add(0, track)
                 notifyItemInserted(0)
             } else {
                 val index = tracks.indexOf(track)
@@ -41,27 +40,26 @@ class TracksAdapter(val trackListener: TrackListener) : RecyclerView.Adapter<Tra
                     notifyItemMoved(tracks.indexOf(track), 0)
                     tracks.removeAt(tracks.indexOf(track))
                     tracks.add(0, track)
-                    trackDataHandler.tracks.apply {
-                        removeAt(indexOf(track))
-                        add(0, track)
-                    }
                 }
 
             }
         } else {
-            trackDataHandler.tracks.removeLast()
             tracks.removeLast()
-            addTrack(track, trackDataHandler)
+            addTrack(track)
         }
     }
 
-    fun getTracks(): List<Track> {
-        return tracks
+    fun updateTrack(track: Track) {
+        val index = tracks.indexOf(track)
+        if (index != -1) {
+            tracks[index] = track
+            notifyItemChanged(index)
+        }
+
     }
 
     interface TrackListener {
         fun onClick(track: Track)
     }
-
 
 }

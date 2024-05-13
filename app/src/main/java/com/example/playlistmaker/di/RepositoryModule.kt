@@ -37,7 +37,7 @@ val repositoryModule = module {
         ExternalNavigatorImpl(androidContext())
     }
     single<FavoritesTracksRepository> {
-        FavoritesTracksRepositoryImpl(get(), get())
+        FavoritesTracksRepositoryImpl(get(), get(),get())
     }
     factory { TrackDbConvertor() }
 }

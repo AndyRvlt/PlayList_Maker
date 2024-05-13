@@ -5,11 +5,10 @@ import com.example.playlistmaker.search.domain.repository.TrackRepository
 import kotlinx.coroutines.flow.Flow
 
 class GetTracksInteractorImpl(
-    val trackRepository: TrackRepository
-
+    private val trackRepository: TrackRepository
 ) : GetTracksInteractor {
 
     override fun getTracks(text: String): Flow<List<Track>> {
         return trackRepository.getTracks(text)
-        }
     }
+}

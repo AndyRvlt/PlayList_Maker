@@ -79,10 +79,10 @@ class AudioPlayerActivity : AppCompatActivity() {
                 buttonPause.isVisible = false
             }
 
-            audioPlayerViewModel.getStateLiveData()
+            audioPlayerViewModel.getAudioStateLiveData()
                 .observe(this@AudioPlayerActivity) { state ->
                     trackTimePlay.text = SimpleDateFormat("mm:ss", Locale.getDefault())
-                        .format(state.playState.onPlayProgressStatus)
+                        .format(state.onPlayProgressStatus)
                 }
 
             arrowBack.setOnClickListener {
@@ -98,10 +98,8 @@ class AudioPlayerActivity : AppCompatActivity() {
             }
         }
 
-        audioPlayerViewModel.getStateLiveData().observe(this@AudioPlayerActivity) {
-            val isFavorite = (it.track)?.run {
-                isFavorite
-            } ?: false
+        audioPlayerViewModel.getTrackStateLiveData().observe(this@AudioPlayerActivity) {
+            val isFavorite = (it)?.run { isFavorite } ?: false
             binding.buttonLike.isVisible = !isFavorite
             binding.buttonLikeOn.isVisible = isFavorite
         }
