@@ -27,7 +27,7 @@ class SearchFragment : Fragment(), TracksAdapter.TrackListener {
     companion object {
         private const val SEARCH_TEXT = "SEARCH_TEXT"
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 
     private val searchViewModel by viewModel<SearchViewModel>()
@@ -117,39 +117,43 @@ class SearchFragment : Fragment(), TracksAdapter.TrackListener {
 
         }
 
-        searchViewModel.getTracksLiveData()
-            .observe(viewLifecycleOwner) { tracks ->
-
-                binding.progressBar.isVisible = false
+        searchViewModel.getTracksLiveData().observe(viewLifecycleOwner) { tracks ->
+            binding.progressBar.isVisible = false
+            if (searchText.isNotEmpty()) {
 
                 adapter.updateTracks(tracks ?: listOf())
-                if (tracks != null) {
-                    if (adapter.getTracks().isEmpty()) {
-                        binding.searchPlayList.isVisible = false
-                        binding.searchError.isVisible = true
-                        binding.textErrorNothing.isVisible = true
 
-
-                    } else {
-                        binding.searchPlayList.isVisible = true
-                        binding.searchError.isVisible = false
-                        binding.textErrorNothing.isVisible = false
-                        binding.searchServerError.isVisible = false
-                        binding.textServerError.isVisible = false
-                        binding.update.isVisible = false
-                        binding.progressBar.isVisible = false
-                    }
+                if (tracks.isEmpty()) {
+                    binding.searchPlayList.isVisible = false
+                    binding.searchError.isVisible = true
+                    binding.textErrorNothing.isVisible = true
+                } else {
+                    binding.searchPlayList.isVisible = true
+                    binding.searchError.isVisible = false
+                    binding.textErrorNothing.isVisible = false
+                    binding.searchServerError.isVisible = false
+                    binding.textServerError.isVisible = false
+                    binding.update.isVisible = false
+                    binding.progressBar.isVisible = false
                 }
             }
-
-        searchViewModel.getPrefTracksLiveData().observe(viewLifecycleOwner) {
-            val (trackDataHandler, track) = it
-
-            track?.let {
-                adapterHistory.addTrack(track, trackDataHandler)
-                searchViewModel.writeTracks(trackDataHandler)
+        }
+        searchViewModel.getUpdateLoadedTrackLiveData().observe(viewLifecycleOwner) {
+            it?.let {
+                adapter.updateTrack(it)
             }
         }
+
+        searchViewModel.getSelectedTrackLiveData().observe(viewLifecycleOwner) {
+            it?.let {
+                adapterHistory.addTrack(it)
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        searchViewModel.init()
     }
 
     private var isClickAllowed = true
@@ -227,7 +231,7 @@ class SearchFragment : Fragment(), TracksAdapter.TrackListener {
                 Intent(requireContext(), AudioPlayerActivity::class.java).apply {
                     putExtra(TRACK_SERIALIZABLE, track)
                 }
-            searchViewModel.getTracksPref(track)
+            searchViewModel.setSelectedTrack(track)
             startActivity(displayAudioPlayer)
 
         }

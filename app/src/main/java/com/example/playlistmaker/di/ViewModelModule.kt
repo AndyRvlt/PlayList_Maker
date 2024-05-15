@@ -13,12 +13,12 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
-    viewModel {
-        SearchViewModel(get(), get())
-    }
+    single {
+       SearchViewModel(get(), get())
+   }
 
     viewModel {
-        AudioPlayerViewModel(get())
+        AudioPlayerViewModel(get(),get())
     }
 
     viewModel {
@@ -31,7 +31,7 @@ val viewModelModule = module {
         SavePlaylistViewModel()
     }
     viewModel {
-        FavoriteTracksViewModel()
+        FavoriteTracksViewModel(get())
     }
 
     single { MediaPlayer() }
