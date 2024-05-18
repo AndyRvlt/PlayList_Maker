@@ -6,6 +6,7 @@
     android:background="@color/Day_night_background_color_fragments"
     android:orientation="vertical"
     android:paddingTop="4dp"
+    android:id="@+id/media_fragment"
     tools:context=".mediateca.ui.MediaFragment">
 
 

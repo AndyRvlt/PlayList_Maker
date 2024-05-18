@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_savePlaylistsFragment_to_favoriteTracksFragment"
             app:destination="@id/favoriteTracksFragment" />
+        <action
+            android:id="@+id/action_savePlaylistsFragment_to_newPlayListFragment"
+            app:destination="@id/newPlayListFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -64,4 +67,13 @@
         android:name="com.example.playlistmaker.player.UI.AudioPlayerActivity"
         android:label="activity_audio_player"
         tools:layout="@layout/activity_audio_player" />
+    <fragment
+        android:id="@+id/newPlayListFragment"
+        android:name="com.example.playlistmaker.mediateca.ui.NewPlayListFragment"
+        android:label="NewPlayListFragment"
+        tools:layout="@layout/fragment_new_playlist">
+        <action
+            android:id="@+id/action_newPlayListFragment_to_savePlaylistsFragment"
+            app:destination="@id/savePlaylistsFragment" />
+    </fragment>
 </navigation>
