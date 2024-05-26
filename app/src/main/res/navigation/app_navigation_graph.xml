@@ -16,15 +16,12 @@
     </fragment>
     <fragment
         android:id="@+id/savePlaylistsFragment"
-        android:name="com.example.playlistmaker.mediateca.ui.SavePlaylistsFragment"
+        android:name="com.example.playlistmaker.mediateca.ui.PlaylistsFragment"
         android:label="fragment_save_playlists"
         tools:layout="@layout/fragment_save_playlists">
         <action
             android:id="@+id/action_savePlaylistsFragment_to_favoriteTracksFragment"
             app:destination="@id/favoriteTracksFragment" />
-        <action
-            android:id="@+id/action_savePlaylistsFragment_to_newPlayListFragment"
-            app:destination="@id/newPlayListFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -52,6 +49,9 @@
         <action
             android:id="@+id/action_mediaFragment2_to_searchFragment2"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_mediaFragment_to_newPlayListFragment"
+            app:destination="@id/newPlayListFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -73,7 +73,7 @@
         android:label="NewPlayListFragment"
         tools:layout="@layout/fragment_new_playlist">
         <action
-            android:id="@+id/action_newPlayListFragment_to_savePlaylistsFragment"
-            app:destination="@id/savePlaylistsFragment" />
+            android:id="@+id/action_newPlayListFragment_to_mediaFragment"
+            app:destination="@id/mediaFragment" />
     </fragment>
 </navigation>

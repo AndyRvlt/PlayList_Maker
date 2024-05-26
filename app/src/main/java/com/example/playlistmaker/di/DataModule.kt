@@ -3,6 +3,7 @@ package com.example.playlistmaker.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.playlistmaker.db.PlaylistDatabase
 import com.example.playlistmaker.db.TracksDatabase
 import com.example.playlistmaker.search.data.network.NetworkClient
 import com.example.playlistmaker.search.data.network.RetrofitNetworkClient
@@ -54,6 +55,10 @@ val dataModule = module {
 
     single {
         Room.databaseBuilder(androidContext(), TracksDatabase::class.java, "track_table.db").build()
+    }
+    single {
+        Room.databaseBuilder(androidContext(), PlaylistDatabase::class.java, "playlist_table.db")
+            .build()
     }
 
 }
